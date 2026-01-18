@@ -3,32 +3,38 @@
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
+
+  <!-- 1) Подключаем строгий шрифт Google Fonts -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;700&display=swap" rel="stylesheet">
+
   <title>Кристина Диор</title>
-  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?
-  family=Montserrat:wght@400;600;700&display=swap">
+
   <style>
-    body { font-family: "Poppins", Arial, sans-serif; }
-    .wrap { display: flex; align-items: center; gap: 24px; flex-wrap: wrap; }
-    img { width: 320px; max-width: 90vw; height: auto; border-radius: 12px; }
-    .text { font-size: 28px; }
-    .btn {
-      display: inline-block;
-      margin-top: 14px;
-      padding: 12px 18px;
-      background:#2AABEE;
-      color:#fff;
-      text-decoration:none;
-      border-radius:10px;
+    /* 2) Чтобы фон занимал весь экран */
+    html, body { height: 100%; }
+
+    /* 3) Общие настройки страницы */
+    body {
+      margin: 0;
+      font-family: "Poppins", Arial, sans-serif;
+      color: #111;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      padding: 40px 20px;
+
+      /* 4) Красивый фон: градиент + мягкие "световые" пятна */
+      background:
+        radial-gradient(600px 350px at 15% 20%, rgba(255, 255, 255, 0.55), transparent 60%),
+        radial-gradient(700px 420px at 85% 30%, rgba(255, 255, 255, 0.35), transparent 60%),
+        linear-gradient(135deg, #0f172a, #5b21b6, #db2777);
     }
-  </style>
-</head>
-<body>
-  <div class="wrap">
-    <img src="./assets/me.jpg" alt="Моё фото">
-    <div>
-      <div class="text">Это я, Кристина Диор</div>
-      <a class="btn" href="https://t.me/krsdrnv" target="_blank" rel="noopener">Написать мне</a>
-    </div>
-  </div>
-</body>
-</html>
+
+    /* 5) Карточка (полупрозрачная, чтобы выглядело аккуратно) */
+    .card {
+      width: min(900px, 100%);
+      background: rgba(255, 255, 255, 0.70);
+      bo
+
