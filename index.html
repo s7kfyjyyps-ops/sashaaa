@@ -4,7 +4,6 @@
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
 
-  <!-- 1) Подключаем строгий шрифт Google Fonts -->
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;700&display=swap" rel="stylesheet">
@@ -12,29 +11,64 @@
   <title>Кристина Диор</title>
 
   <style>
-    /* 2) Чтобы фон занимал весь экран */
     html, body { height: 100%; }
 
-    /* 3) Общие настройки страницы */
-    body {
-      margin: 0;
-      font-family: "Poppins", Arial, sans-serif;
-      color: #111;
-      display: flex;
-      justify-content: center;
-      align-items: center;
-      padding: 40px 20px;
+    body{
+      margin:0;
+      font-family:"Poppins", Arial, sans-serif;
+      color:#0b0b0b;
+      padding:40px 20px;
 
-      /* 4) Красивый фон: градиент + мягкие "световые" пятна */
       background:
-        radial-gradient(600px 350px at 15% 20%, rgba(255, 255, 255, 0.55), transparent 60%),
-        radial-gradient(700px 420px at 85% 30%, rgba(255, 255, 255, 0.35), transparent 60%),
+        radial-gradient(600px 350px at 15% 20%, rgba(255,255,255,.45), transparent 60%),
+        radial-gradient(700px 420px at 85% 30%, rgba(255,255,255,.25), transparent 60%),
         linear-gradient(135deg, #0f172a, #5b21b6, #db2777);
     }
 
-    /* 5) Карточка (полупрозрачная, чтобы выглядело аккуратно) */
-    .card {
-      width: min(900px, 100%);
-      background: rgba(255, 255, 255, 0.70);
-      bo
+    .card{
+      max-width:900px;
+      margin:0 auto;
+      background:#ffffff;              /* без прозрачности, чтобы точно было видно */
+      border-radius:18px;
+      padding:28px;
+      box-shadow: 0 18px 60px rgba(0,0,0,.25);
+    }
+
+    .wrap{ display:flex; gap:24px; align-items:center; flex-wrap:wrap; }
+
+    img{
+      width:320px;
+      max-width:90vw;
+      height:auto;
+      border-radius:14px;
+    }
+
+    .text{ font-size:30px; font-weight:700; }
+
+    .btn{
+      display:inline-block;
+      margin-top:14px;
+      padding:12px 18px;
+      background:#2AABEE;
+      color:#fff;
+      text-decoration:none;
+      border-radius:12px;
+      font-weight:600;
+    }
+  </style>
+</head>
+
+<body>
+  <div class="card">
+    <div class="wrap">
+      <img src="./assets/me.jpg" alt="Моё фото">
+      <div>
+        <div class="text">Это я, Кристина Диор</div>
+        <a class="btn" href="https://t.me/krsdrnv" target="_blank" rel="noopener">Написать мне</a>
+      </div>
+    </div>
+  </div>
+</body>
+</html>
+
 
