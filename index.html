@@ -11,64 +11,215 @@
   <title>Кристина Диор</title>
 
   <style>
+    :root{
+      --bg1:#070a12;
+      --bg2:#0b1020;
+      --line: rgba(255,255,255,0.12);
+      --text: rgba(255,255,255,0.92);
+      --muted: rgba(255,255,255,0.68);
+      --hover: rgba(255,255,255,0.06);
+    }
+
+    * { box-sizing: border-box; }
     html, body { height: 100%; }
 
     body{
       margin:0;
       font-family:"Poppins", Arial, sans-serif;
-      color:#0b0b0b;
-      padding:40px 20px;
-
-      background:
-        radial-gradient(600px 350px at 15% 20%, rgba(255,255,255,.45), transparent 60%),
-        radial-gradient(700px 420px at 85% 30%, rgba(255,255,255,.25), transparent 60%),
-        linear-gradient(135deg, #0f172a, #5b21b6, #db2777);
+      color: var(--text);
+      background: linear-gradient(135deg, var(--bg1), var(--bg2));
+      padding: 24px 16px;
     }
 
-    .card{
-      max-width:900px;
-      margin:0 auto;
-      background:#ffffff;              /* без прозрачности, чтобы точно было видно */
-      border-radius:18px;
-      padding:28px;
-      box-shadow: 0 18px 60px rgba(0,0,0,.25);
+    .app{ max-width: 920px; margin: 0 auto; }
+
+    /* Меню */
+    .nav{
+      display:flex;
+      gap:10px;
+      flex-wrap:wrap;
+      padding: 10px 0;
+      border-bottom: 1px solid var(--line);
+
+      position: sticky;
+      top: 0;
+
+      background: linear-gradient(135deg, rgba(7,10,18,0.92), rgba(11,16,32,0.92));
+      backdrop-filter: blur(10px);
+      -webkit-backdrop-filter: blur(10px);
     }
 
-    .wrap{ display:flex; gap:24px; align-items:center; flex-wrap:wrap; }
-
-    img{
-      width:320px;
-      max-width:90vw;
-      height:auto;
-      border-radius:14px;
+    .tab{
+      border: 1px solid transparent;
+      background: transparent;
+      color: var(--muted);
+      padding: 10px 12px;
+      border-radius: 12px;
+      cursor: pointer;
+      font-weight: 600;
+      letter-spacing: 0.2px;
+    }
+    .tab:hover{ background: var(--hover); }
+    .tab.active{
+      color: var(--text);
+      border-color: var(--line);
+      background: rgba(255,255,255,0.03);
     }
 
-    .text{ font-size:30px; font-weight:700; }
+    .content{ padding-top: 18px; }
+
+    .section{ display:none; }
+    .section.active{ display:block; }
+
+    .title{
+      margin: 0 0 10px;
+      font-size: 18px;
+      font-weight: 700;
+      letter-spacing: 0.3px;
+    }
+
+    p{
+      margin: 0;
+      line-height: 1.65;
+      color: var(--muted);
+      max-width: 72ch;
+    }
+
+    /* Кнопки */
+    .links{ display:flex; gap:10px; flex-wrap:wrap; margin-top: 14px; }
 
     .btn{
-      display:inline-block;
-      margin-top:14px;
-      padding:12px 18px;
-      background:#2AABEE;
-      color:#fff;
-      text-decoration:none;
-      border-radius:12px;
-      font-weight:600;
+      display:inline-flex;
+      align-items:center;
+      padding: 10px 12px;
+      border-radius: 12px;
+      border: 1px solid var(--line);
+      background: rgba(255,255,255,0.02);
+      color: var(--text);
+      text-decoration: none;
+      font-weight: 600;
+    }
+    .btn:hover{ background: var(--hover); }
+
+    /* Галерея */
+    .gallery{
+      display:flex;
+      flex-direction: column;
+      gap: 12px;
+      align-items: flex-start;
+    }
+
+    .gallery img{
+      width: 360px;
+      max-width: 92vw;
+      height: auto;
+      border-radius: 14px;
+      border: 1px solid var(--line);
+      background: rgba(255,255,255,0.03);
+    }
+
+    .g-controls{
+      display:flex;
+      align-items:center;
+      gap:10px;
+    }
+
+    .arrow{
+      width: 34px;
+      height: 34px;
+      border-radius: 12px;
+      border: 1px solid var(--line);
+      background: rgba(255,255,255,0.02);
+      color: var(--text);
+      cursor: pointer;
+      font-weight: 700;
+      line-height: 1;
+    }
+    .arrow:hover{ background: var(--hover); }
+
+    #counter{
+      color: var(--muted);
+      font-weight: 600;
+      font-size: 13px;
+      user-select: none;
     }
   </style>
 </head>
 
 <body>
-  <div class="card">
-    <div class="wrap">
-      <img src="./assets/me.jpg" alt="Моё фото">
-      <div>
-        <div class="text">Это я, Кристина Диор</div>
-        <a class="btn" href="https://t.me/krsdrnv" target="_blank" rel="noopener">Написать мне</a>
-      </div>
+  <div class="app">
+    <div class="nav">
+      <button class="tab active" data-target="about">Обо мне</button>
+      <button class="tab" data-target="contact">Написать мне</button>
+      <button class="tab" data-target="gallery">Галерея</button>
+    </div>
+
+    <div class="content">
+      <section id="about" class="section active">
+        <h2 class="title">Обо мне</h2>
+        <p>Это я, Кристина Диор. Я очень люблю пить матчу, смотреть сплетниц, а еще я хочу поступить во МГИМО</p>
+      </section>
+
+      <section id="contact" class="section">
+        <h2 class="title">Написать мне</h2>
+        <div class="links">
+          <a class="btn" href="https://t.me/krsdrnv" target="_blank" rel="noopener">TG</a>
+          <a class="btn" href="https://www.instagram.com/krsdrnv/" target="_blank" rel="noopener">IG</a>
+          <a class="btn" href="https://www.tiktok.com/@krsdrnv" target="_blank" rel="noopener">Tik Tok</a>
+        </div>
+      </section>
+
+      <section id="gallery" class="section">
+        <h2 class="title">Галерея</h2>
+
+        <div class="gallery">
+          <img id="galleryImg" src="./assets/g1.jpg" alt="Фото из галереи">
+          <div class="g-controls">
+            <button class="arrow" id="prevBtn" type="button" aria-label="Назад">←</button>
+            <button class="arrow" id="nextBtn" type="button" aria-label="Дальше">→</button>
+            <span id="counter"></span>
+          </div>
+        </div>
+      </section>
     </div>
   </div>
+
+  <script>
+    // Переключение разделов
+    const tabs = document.querySelectorAll('.tab');
+    const sections = document.querySelectorAll('.section');
+
+    function showSection(id){
+      sections.forEach(s => s.classList.toggle('active', s.id === id));
+      tabs.forEach(t => t.classList.toggle('active', t.dataset.target === id));
+    }
+
+    tabs.forEach(btn => btn.addEventListener('click', () => showSection(btn.dataset.target)));
+
+    // Галерея: 3 фото + стрелки
+    const images = ["./assets/g1.jpg","./assets/g2.jpg","./assets/g3.jpg"];
+    let i = 0;
+
+    const imgEl = document.getElementById('galleryImg');
+    const counter = document.getElementById('counter');
+
+    function render(){
+      imgEl.src = images[i];
+      counter.textContent = (i + 1) + " / " + images.length;
+    }
+
+    document.getElementById('nextBtn').addEventListener('click', () => {
+      i = (i + 1) % images.length;
+      render();
+    });
+
+    document.getElementById('prevBtn').addEventListener('click', () => {
+      i = (i - 1 + images.length) % images.length;
+      render();
+    });
+
+    render();
+  </script>
 </body>
 </html>
-
 
