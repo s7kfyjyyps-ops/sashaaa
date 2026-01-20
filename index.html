@@ -1,100 +1,62 @@
 <!DOCTYPE html>
 <html lang="ru">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Портфолио @krsdrnv</title>
-    <style>
-        * { margin: 0; padding: 0; box-sizing: border-box; }
-        body { 
-            font-family: 'Arial', sans-serif; 
-            background: #0a0a0a; color: #fff; 
-            overflow-x: hidden; height: 100vh;
-        }
-        #vanta-bg { position: fixed; top: 0; left: 0; z-index: -1; }
-        nav { position: fixed; top: 20px; right: 20px; z-index: 100; }
-        nav a { color: #fff; text-decoration: none; margin: 0 10px; opacity: 0.8; transition: 0.3s; }
-        nav a:hover { opacity: 1; }
-        .hero { height: 100vh; display: flex; flex-direction: column; justify-content: center; align-items: center; text-align: center; }
-        h1 { font-size: 4rem; margin-bottom: 20px; }
-        .gallery { 
-            display: grid; grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); 
-            gap: 20px; padding: 50px; max-width: 1200px; margin: 0 auto;
-        }
-        .photo-card { 
-            position: relative; height: 300px; border-radius: 10px; overflow: hidden; 
-            cursor: pointer; transition: transform 0.3s, box-shadow 0.3s;
-            background: linear-gradient(45deg, #1a1a2e, #16213e);
-        }
-        .photo-card:hover { transform: scale(1.05); box-shadow: 0 20px 40px rgba(0,0,0,0.5); }
-        .photo-card img { width: 100%; height: 100%; object-fit: cover; }
-        @media (max-width: 768px) { h1 { font-size: 2.5rem; } }
-    </style>
-    <!-- Vanta.js CDN -->
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r134/three.min.js"></script>
-    <script src="https://cdn.jsdelivr.net/npm/vanta@latest/dist/vanta.waves.min.js"></script>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>@krsdrnv</title>
+<style>
+*{margin:0;padding:0;box-sizing:border-box}
+body{font-family:Arial,sans-serif;background:linear-gradient(135deg,#0a0a0a,#1a1a2e);color:#fff;min-height:100vh}
+.bg{position:fixed;top:0;left:0;width:100%;height:100%;z-index:-1;background:radial-gradient(circle at 20% 80%,#16213e 0%,#0a0a0a 50%);animation:float 20s ease-in-out infinite}
+@keyframes float{0%,100%{transform:translateY(0)}50%{transform:translateY(-20px)}}
+nav{position:fixed;top:30px;right:30px;z-index:100;background:rgba(0,0,0,0.5);padding:15px;border-radius:20px;backdrop-filter:blur(10px)}
+nav a{color:#fff;text-decoration:none;margin:0 15px;transition:0.3s}
+nav a:hover{color:#00ff88}
+.hero{min-height:100vh;display:flex;flex-direction:column;justify-content:center;align-items:center;text-align:center;padding:50px 20px}
+.profile{display:flex;flex-direction:column;align-items:center;gap:30px;max-width:600px}
+.profile img{width:200px;height:200px;border-radius:50%;object-fit:cover;box-shadow:0 20px 60px rgba(0,255,136,0.3);border:3px solid #00ff88}
+h1{font-size:3rem;text-shadow:0 0 30px rgba(0,255,136,0.5)}
+.bio{font-size:1.2rem;line-height:1.8;opacity:0.9}
+.gallery{padding:100px 50px;max-width:1400px;margin:0 auto}
+.gallery h2{text-align:center;font-size:3rem;margin-bottom:50px}
+.grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(300px,1fr));gap:30px}
+.card{position:relative;height:350px;border-radius:20px;overflow:hidden;cursor:pointer;transition:0.4s;transform-style:preserve-3d;box-shadow:0 20px 40px rgba(0,0,0,0.3)}
+.card:hover{transform:translateY(-20px) rotateY(5deg) scale(1.05);box-shadow:0 40px 80px rgba(0,255,136,0.2)}
+.card img{width:100%;height:100%;object-fit:cover;transition:0.4s}
+.card:hover img{transform:scale(1.1)}
+.modal{position:fixed;top:0;left:0;width:100%;height:100%;background:rgba(0,0,0,0.95);z-index:1000;display:none;align-items:center;justify-content:center}
+.modal.active{display:flex}
+.modal img{max-width:90%;max-height:90%;border-radius:10px}
+@media(max-width:768px){.profile img{width:150px;height:150px}h1{font-size:2rem}.bio{font-size:1rem}}
+</style>
 </head>
 <body>
-    <div id="vanta-bg"></div>
-    
-    <nav>
-        <a href="#about">Обо мне</a>
-        <a href="#gallery">Галерея</a>
-        <a href="https://t.me/krsdrnv">Написать</a>
-    </nav>
-    
-    <section class="hero" id="about">
-        <h1>@krsdrnv</h1>
-        <p>Минимализм. Фото. Код.</p>
-    </section>
-    
-    <section id="gallery" class="gallery">
-        <!-- Твои 4 фото — замени src -->
-        <div class="photo-card"><img src="https://via.placeholder.com/400x300/333/fff?text=1" alt="Фото 1"></div>
-        <div class="photo-card"><img src="https://via.placeholder.com/400x300/444/fff?text=2" alt="Фото 2"></div>
-        <div class="photo-card"><img src="https://via.placeholder.com/400x300/555/fff?text=3" alt="Фото 3"></div>
-        <div class="photo-card"><img src="https://via.placeholder.com/400x300/666/fff?text=4" alt="Фото 4"></div>
-    </section>
-
-    <script>
-        // 3D фон Vanta Waves (анимация волн)
-        VANTA.WAVES({
-            el: "#vanta-bg",
-            mouseControls: true,
-            touchControls: true,
-            gyroControls: false,
-            minHeight: 200.00,
-            minWidth: 200.00,
-            scale: 1.00,
-            scaleMobile: 1.00,
-            color: 0x1a1a2e,
-            shininess: 50.00,
-            waveHeight: 20.00,
-            waveSpeed: 0.65,
-            zoom: 0.65
-        });
-
-        // Smooth scroll
-        document.querySelectorAll('a[href^="#"]').forEach(anchor => {
-            anchor.addEventListener('click', function (e) {
-                e.preventDefault(); document.querySelector(this.getAttribute('href')).scrollIntoView({ behavior: 'smooth' });
-            });
-        });
-
-        // Галерея: клик → модалка (full screen)
-        document.querySelectorAll('.photo-card').forEach(card => {
-            card.addEventListener('click', function() {
-                const modal = document.createElement('div');
-                modal.style.cssText = `
-                    position: fixed; top: 0; left: 0; width: 100%; height: 100%; 
-                    background: rgba(0,0,0,0.9); z-index: 1000; display: flex; align-items: center; justify-content: center;
-                `;
-                modal.innerHTML = `<img src="${this.querySelector('img').src}" style="max-width:90%; max-height:90%; border-radius:10px;">`;
-                modal.onclick = () => document.body.removeChild(modal);
-                document.body.appendChild(modal);
-            });
-        });
-    </script>
+<div class="bg"></div>
+<nav>
+<a href="#about">Обо мне</a>
+<a href="#gallery">Галерея</a>
+<a href="https://t.me/krsdrnv">Написать</a>
+</nav>
+<section class="hero" id="about">
+<div class="profile">
+<img src="g1.jpg" alt="Кристина Диор">
+<h1>Хеллоу, это я Кристина Диор</h1>
+<p class="bio">Я люблю пить пимс, матчу, а еще много учусь</p>
+</div>
+</section>
+<section id="gallery" class="gallery">
+<h2>Мои работы</h2>
+<div class="grid">
+<div class="card" data-img="g1.jpg"><img src="g1.jpg" alt="Фото 1"></div>
+<div class="card" data-img="g2.jpg"><img src="g2.jpg" alt="Фото 2"></div>
+<div class="card" data-img="g3.jpg"><img src="g3.jpg" alt="Фото 3"></div>
+</div>
+</section>
+<div class="modal" id="modal"><img id="modal-img" src="" alt=""></div>
+<script>
+document.querySelectorAll('a[href^="#"]').forEach(a=>{a.addEventListener('click',e=>{e.preventDefault();document.querySelector(a.getAttribute('href')).scrollIntoView({behavior:'smooth'})})});
+document.querySelectorAll('.card').forEach(c=>{c.addEventListener('click',()=>{document.getElementById('modal-img').src=c.dataset.img;document.getElementById('modal').classList.add('active')})});
+document.getElementById('modal').addEventListener('click',()=>{document.getElementById('modal').classList.remove('active')});
+</script>
 </body>
 </html>
-
