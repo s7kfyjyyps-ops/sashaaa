@@ -85,8 +85,8 @@ clickCount++;
 if(clickCount===5){
 audio.play();
 avatar.style.animation='spin 1s ease-in-out';
-setTimeout(()=>{fullscreen.classList.add('show')},3000);
-setTimeout(()=>{fullscreen.classList.remove('show')},5000);
+setTimeout(()=>{fullscreen.classList.add('show')},4000);
+setTimeout(()=>{fullscreen.classList.remove('show')},6000);
 setTimeout(()=>{avatar.style.animation='';clickCount=0},1000);
 }
 setTimeout(()=>{if(clickCount<5)clickCount=0},2000);
