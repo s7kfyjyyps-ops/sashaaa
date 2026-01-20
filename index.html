@@ -22,9 +22,12 @@ h1{font-size:3rem;text-shadow:0 0 30px rgba(0,255,136,0.5)}
 .social-btns a:hover{background:#00ff88;color:#0a0a0a;transform:scale(1.05)}
 .gallery{min-height:100vh;padding:100px 50px;max-width:1400px;margin:0 auto;display:flex;align-items:center}
 .grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(300px,1fr));gap:30px;width:100%}
-.card{position:relative;height:350px;border-radius:20px;overflow:hidden;cursor:pointer;transition:0.4s;transform-style:preserve-3d;box-shadow:0 20px 40px rgba(0,0,0,0.3)}
+.card{position:relative;height:350px;border-radius:20px;overflow:hidden;cursor:pointer;transition:0.4s;transform-style:preserve-3d;box-shadow:0 20px 40px rgba(0,0,0,0.3);opacity:0;transform:translateY(50px)}
+.card.loaded{opacity:1;transform:translateY(0)}
 .card:hover{transform:translateY(-20px) rotateY(5deg) scale(1.05);box-shadow:0 40px 80px rgba(0,255,136,0.2)}
-.card img{width:100%;height:100%;object-fit:cover;transition:0.4s}
+.card img{width:100%;height:100%;object-fit:cover;transition:0.4s;background:linear-gradient(135deg,#1a1a2e,#16213e)}
+.card img.lazy{opacity:0;transition:opacity 0.6s}
+.card img.lazy.loaded{opacity:1}
 .card:hover img{transform:scale(1.1)}
 .modal{position:fixed;top:0;left:0;width:100%;height:100%;background:rgba(0,0,0,0.95);z-index:1000;display:none;align-items:center;justify-content:center}
 .modal.active{display:flex}
@@ -52,15 +55,38 @@ h1{font-size:3rem;text-shadow:0 0 30px rgba(0,255,136,0.5)}
 </section>
 <section id="gallery" class="gallery">
 <div class="grid">
-<div class="card" data-img="assets/g1.jpg"><img src="assets/g1.jpg" alt="Фото 1"></div>
-<div class="card" data-img="assets/g2.jpg"><img src="assets/g2.jpg" alt="Фото 2"></div>
-<div class="card" data-img="assets/g3.jpg"><img src="assets/g3.jpg" alt="Фото 3"></div>
+<div class="card"><img class="lazy" data-src="assets/g1.jpg" alt="Фото 1"></div>
+<div class="card"><img class="lazy" data-src="assets/g2.jpg" alt="Фото 2"></div>
+<div class="card"><img class="lazy" data-src="assets/g3.jpg" alt="Фото 3"></div>
 </div>
 </section>
 <div class="modal" id="modal"><img id="modal-img" src="" alt=""></div>
 <script>
 document.querySelectorAll('a[href^="#"]').forEach(a=>{a.addEventListener('click',e=>{e.preventDefault();document.querySelector(a.getAttribute('href')).scrollIntoView({behavior:'smooth'})})});
-document.querySelectorAll('.card').forEach(c=>{c.addEventListener('click',()=>{document.getElementById('modal-img').src=c.dataset.img;document.getElementById('modal').classList.add('active')})});
+
+// Lazy load для фото при скролле
+const lazyImages=document.querySelectorAll('img.lazy');
+const imageObserver=new IntersectionObserver((entries,observer)=>{
+entries.forEach(entry=>{
+if(entry.isIntersecting){
+const img=entry.target;
+img.src=img.dataset.src;
+img.classList.add('loaded');
+img.parentElement.classList.add('loaded');
+observer.unobserve(img);
+}
+});
+},{rootMargin:'50px'});
+lazyImages.forEach(img=>imageObserver.observe(img));
+
+// Модалка
+document.querySelectorAll('.card').forEach(c=>{c.addEventListener('click',()=>{
+const imgSrc=c.querySelector('img').src;
+if(imgSrc){
+document.getElementById('modal-img').src=imgSrc;
+document.getElementById('modal').classList.add('active');
+}
+})});
 document.getElementById('modal').addEventListener('click',()=>{document.getElementById('modal').classList.remove('active')});
 </script>
 </body>
