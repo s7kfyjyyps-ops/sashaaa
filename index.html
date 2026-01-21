@@ -16,7 +16,7 @@ nav a:hover{color:#00ff88}
 .secret-icon:hover{color:#00ff88;transform:scale(1.1)}
 .hero{min-height:100vh;display:flex;flex-direction:column;justify-content:center;align-items:center;text-align:center;padding:50px 20px}
 .profile{display:flex;flex-direction:column;align-items:center;gap:30px;max-width:600px}
-.profile img{width:200px;height:200px;border-radius:50%;object-fit:cover;box-shadow:0 20px 60px rgba(0,255,136,0.3);border:3px solid #00ff88;cursor:pointer;transition:0.3s;user-select:none;-webkit-user-select:none;-webkit-touch-callout:none}
+.profile img{width:200px;height:200px;border-radius:50%;object-fit:cover;box-shadow:0 20px 60px rgba(0,255,136,0.3);border:3px solid #00ff88;cursor:pointer;transition:0.3s}
 .profile img:active{transform:scale(0.95)}
 h1{font-size:3rem;text-shadow:0 0 30px rgba(0,255,136,0.5)}
 .bio{font-size:1.2rem;line-height:1.8;opacity:0.9}
@@ -102,24 +102,83 @@ const imageObserver=new IntersectionObserver((entries,observer)=>{entries.forEac
 lazyImages.forEach(img=>imageObserver.observe(img));
 
 let clickCount=0;
-let resetTimer=null;
 const avatar=document.getElementById('avatar');
 const audio=document.getElementById('secret-audio');
 const fullscreen=document.getElementById('fullscreen');
 
-function handleAvatarInteraction(e){
-e.preventDefault();
+function handleAvatarInteraction(){
 clickCount++;
-if(resetTimer)clearTimeout(resetTimer);
-resetTimer=setTimeout(()=>{clickCount=0},2000);
 if(clickCount===5){
 audio.play();
 avatar.style.animation='spin 1s ease-in-out';
 setTimeout(()=>{fullscreen.classList.add('show')},4000);
 setTimeout(()=>{fullscreen.classList.remove('show')},6000);
 setTimeout(()=>{avatar.style.animation='';clickCount=0},1000);
-clearTimeout(resetTimer);
+}
+setTimeout(()=>{if(clickCount<5)clickCount=0},2000);
+}
+
+avatar.addEventListener('click',handleAvatarInteraction);
+avatar.addEventListener('touchend',handleAvatarInteraction);
+
+document.querySelectorAll('.card').forEach(c=>{c.addEventListener('click',()=>{const imgSrc=c.querySelector('img').src;if(imgSrc){document.getElementById('modal-img').src=imgSrc;document.getElementById('modal').classList.add('active')}})});
+document.getElementById('modal').addEventListener('click',()=>{document.getElementById('modal').classList.remove('active')});
+fullscreen.addEventListener('click',()=>{fullscreen.classList.remove('show')});
+
+function toggleSecretInput(){
+const input=document.getElementById('secret-input');
+input.classList.toggle('show');
+if(input.classList.contains('show')){
+document.getElementById('password').focus();
 }
 }
 
-avatar.addEventListener('touchend',handleAvatarInteract
+let heartInterval=null;
+function checkPassword(){
+const pwd=document.getElementById('password').value;
+if(pwd==='Дрысясися'){
+document.getElementById('secret-page').classList.add('show');
+document.getElementById('secret-input').classList.remove('show');
+createHearts();
+document.getElementById('password').value='';
+}else{
+document.getElementById('password').style.border='2px solid red';
+setTimeout(()=>{document.getElementById('password').style.border='2px solid #00ff88'},500);
+}
+}
+document.getElementById('password').addEventListener('keypress',e=>{if(e.key==='Enter')checkPassword()});
+
+function createHearts(){
+if(heartInterval)clearInterval(heartInterval);
+const container=document.getElementById('secret-page');
+let count=0;
+const maxHearts=20;
+heartInterval=setInterval(()=>{
+if(count>=maxHearts){
+clearInterval(heartInterval);
+heartInterval=null;
+return;
+}
+const heart=document.createElement('div');
+heart.className='heart';
+heart.textContent='❤️';
+heart.style.left=Math.random()*100+'%';
+heart.style.setProperty('--x',Math.random()*100);
+heart.style.animationDuration=(3+Math.random()*2)+'s';
+container.appendChild(heart);
+setTimeout(()=>heart.remove(),5000);
+count++;
+},300);
+}
+
+function closeSecret(){
+document.getElementById('secret-page').classList.remove('show');
+if(heartInterval){
+clearInterval(heartInterval);
+heartInterval=null;
+}
+document.querySelectorAll('.heart').forEach(h=>h.remove());
+}
+</script>
+</body>
+</html>
