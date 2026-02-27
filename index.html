@@ -1,1 +1,112 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Саша</title>
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body { 
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+            height: 100vh; background: #0a0a0a; color: white; 
+            display: flex; justify-content: center; align-items: center;
+            overflow: hidden;
+        }
+        
+        /* Экран пароля */
+        .password-screen { text-align: center; max-width: 300px; width: 90vw; }
+        .password-screen h1 { font-size: clamp(2rem, 10vw, 4rem); font-weight: 300; letter-spacing: -1px; margin-bottom: 2rem; opacity: 0.8; }
+        .password-screen input { width: 100%; padding: 15px; background: rgba(255,255,255,0.05); border: 1px solid rgba(255,255,255,0.2); border-radius: 0; color: white; font-size: 1.2rem; text-align: center; backdrop-filter: blur(10px); }
+        .password-screen input::placeholder { color: rgba(255,255,255,0.4); }
+        .password-screen input:focus { outline: none; border-color: rgba(255,255,255,0.5); box-shadow: 0 0 20px rgba(255,255,255,0.1); }
+        
+        /* Слайдшоу */
+        .slideshow { position: fixed; top: 0; left: 0; width: 100vw; height: 100vh; display: none; opacity: 0; transition: opacity 1s; }
+        .slideshow.active { display: block; opacity: 1; }
+        .slideshow img { width: 100vw; height: 100vh; object-fit: cover; opacity: 0; transition: opacity 3s ease-in-out; }
+        .slideshow img.active { opacity: 1; }
+    </style>
+</head>
+<body>
+    <!-- Пароль -->
+    <div class="password-screen" id="passwordScreen">
+        <h1>Саша</h1>
+        <input type="password" id="passwordInput" placeholder="пароль" maxlength="10" autocomplete="off">
+    </div>
+
+    <!-- Слайдшоу s1-s5 -->
+    <div class="slideshow" id="slideshow">
+        <img src="assets/s1.jpeg" class="active">
+        <img src="assets/s2.jpeg">
+        <img src="assets/s3.jpeg">
+        <img src="assets/s4.jpeg">
+        <img src="assets/s5.jpeg">
+    </div>
+
+    <script>
+        const passwordInput = document.getElementById('passwordInput');
+        const passwordScreen = document.getElementById('passwordScreen');
+        const slideshow = document.getElementById('slideshow');
+        const photos = document.querySelectorAll('.slideshow img');
+        let audioContext, audioBuffer, isPlaying = false;
+
+        // Загружаем аудио
+        fetch('assets/song1.mp3')
+            .then(response => response.arrayBuffer())
+            .then(arrayBuffer => audioContext ? audioContext.decodeAudioData(arrayBuffer) : 
+                (audioContext = new (window.AudioContext || window.webkitAudioContext)()).decodeAudioData(arrayBuffer))
+            .then(buffer => {
+                audioBuffer = buffer;
+            });
+
+        // Пароль "амина"
+        passwordInput.addEventListener('keypress', (e) => {
+            if (e.key === 'Enter') {
+                if (passwordInput.value === 'амина') {
+                    passwordScreen.style.display = 'none';
+                    slideshow.classList.add('active');
+                    
+                    // Играем 20 секунд музыки
+                    play20Seconds();
+                } else {
+                    passwordInput.value = '';
+                    passwordInput.style.borderColor = 'rgba(255,100,100,0.5)';
+                    setTimeout(() => passwordInput.style.borderColor = 'rgba(255,255,255,0.2)', 500);
+                }
+            }
+        });
+
+        function play20Seconds() {
+            if (!audioBuffer || isPlaying) return;
+            
+            isPlaying = true;
+            const source = audioContext.createBufferSource();
+            source.buffer = audioBuffer;
+            
+            // 20 секунд = 20,000 мс
+            source.stop(audioContext.currentTime + 20);
+            source.connect(audioContext.destination);
+            source.start(0);
+            
+            // Синхронный слайдер каждые 4 секунды (5 фото)
+            let currentPhoto = 0;
+            const interval = 4000; // 4 сек x 5 = 20 сек
+            
+            const slideInterval = setInterval(() => {
+                photos[currentPhoto].classList.remove('active');
+                currentPhoto = (currentPhoto + 1) % 5;
+                photos[currentPhoto].classList.add('active');
+            }, interval);
+            
+            // Останавливаем через 20 сек
+            setTimeout(() => {
+                clearInterval(slideInterval);
+                isPlaying = false;
+            }, 20000);
+        }
+
+        passwordInput.focus();
+    </script>
+</body>
+</html>
 
