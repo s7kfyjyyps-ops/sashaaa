@@ -108,21 +108,21 @@
             transform: scale(0.95); filter: brightness(0.8); 
         }
         
-        /* РАДУЖНЫЙ ТРОЛЛФЕЙС НА КАЖДОЙ ФОТО */
+        /* ТРОЛЛФЕЙС НА КАЖДОЙ ФОТО */
         .troll-overlay {
             position: absolute;
-            top: 15%; left: 20%;
-            width: 60%; height: 70%;
-            background-size: contain;
+            top: 15%; left: 25%;
+            width: 50%; height: 60%;
+            background-size: contain !important;
             background-repeat: no-repeat;
             background-position: center;
             opacity: 0;
-            transition: all 0.8s ease;
+            z-index: 30;
+            transition: opacity 0.5s ease;
             pointer-events: none;
-            z-index: 20;
         }
 
-        .slide.active .troll-overlay {
+        .slideshow.show .troll-overlay {
             opacity: 1;
             animation: trollRainbow 4s ease-in-out infinite;
         }
@@ -230,18 +230,16 @@
         </div>
     </div>
 
-    <!-- ВКЛАДКА 1: ПАСХАЛКА -->
+    <!-- ВКЛАДКА 1: ПАСХАЛКА (6 ФОТО) -->
     <div id="tab1" class="tab-content">
         <div class="slideshow" id="slideshow">
             <img src="assets/s1.jpeg" class="slide active">
-            <div class="troll-overlay"></div>
             <img src="assets/s2.jpeg" class="slide">
-            <div class="troll-overlay"></div>
             <img src="assets/s3.jpeg" class="slide">
-            <div class="troll-overlay"></div>
             <img src="assets/s4.jpeg" class="slide">
-            <div class="troll-overlay"></div>
             <img src="assets/s5.jpeg" class="slide">
+            <img src="assets/s6.jpeg" class="slide">
+            <!-- ОДИН ТРОЛЛФЕЙС ДЛЯ ВСЕХ -->
             <div class="troll-overlay"></div>
         </div>
     </div>
@@ -343,44 +341,43 @@
             document.querySelectorAll('.nav-btn')[tab].classList.add('active');
             currentTab = tab;
             
-            // ТОЧНО 20 СЕКУНД МУЗЫКИ + 5 ФОТО x 4с
             if (tab === 1) {
                 startEasterEgg();
             }
         }
 
-        // ПАСХАЛКА - ТОЧНО 20 СЕКУНД
+        // ПАСХАЛКА - 25 СЕКУНД, 6 ФОТО
         function startEasterEgg() {
             const slideshow = document.getElementById('slideshow');
+            const trollOverlay = document.querySelector('.troll-overlay');
             
-            // Устанавливаем t.jpeg для всех троллов
-            document.querySelectorAll('.troll-overlay').forEach((troll, index) => {
-                troll.style.backgroundImage = 'url("assets/t.jpeg")';
-            });
+            // ТРОЛЛФЕЙС НА ВСЕХ ФОТО
+            trollOverlay.style.backgroundImage = 'url("assets/t.jpeg")';
             
             slideshow.classList.add('show');
             
-            // МУЗЫКА 20 СЕКУНД
+            // МУЗЫКА 25 СЕКУНД
             musicPlayer.currentTime = 0;
             musicPlayer.volume = 0.4;
             musicPlayer.play().catch(() => {});
             
-            // 5 ФОТО x 4 секунды = 20 секунд
+            // 6 ФОТО x 4 секунды + 1 секунда финал = 25 секунд
             showSlide(0);
+            slideIndex = 0;
             slideshowInterval = setInterval(() => {
                 slideIndex++;
-                if (slideIndex < 5) {
+                if (slideIndex < 6) {
                     showSlide(slideIndex);
                 }
             }, 4000);
             
-            // СТОЧНО 20 СЕКУНД ПОСЛЕ ЗАПУСКА
+            // ТОЧНО 25 СЕКУНД
             setTimeout(() => {
                 clearInterval(slideshowInterval);
                 musicPlayer.pause();
                 musicPlayer.currentTime = 0;
                 slideshow.classList.remove('show');
-            }, 20000);
+            }, 25000);
         }
 
         function showSlide(n) {
