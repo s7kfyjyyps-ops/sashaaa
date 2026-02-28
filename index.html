@@ -16,25 +16,45 @@
         /* Экран пароля */
         .password-screen { text-align: center; max-width: 300px; width: 90vw; }
         .password-screen h1 { font-size: clamp(2rem, 10vw, 4rem); font-weight: 300; letter-spacing: -1px; margin-bottom: 2rem; opacity: 0.8; }
-        .password-screen input { width: 100%; padding: 15px; background: rgba(255,255,255,0.05); border: 1px solid rgba(255,255,255,0.2); border-radius: 0; color: white; font-size: 1.2rem; text-align: center; backdrop-filter: blur(10px); }
+        .password-screen input { 
+            width: 100%; padding: 15px; 
+            background: rgba(255,255,255,0.05); 
+            border: 1px solid rgba(255,255,255,0.2); 
+            border-radius: 0; color: white; 
+            font-size: 1.2rem; text-align: center; 
+            backdrop-filter: blur(10px);
+        }
         .password-screen input::placeholder { color: rgba(255,255,255,0.4); }
-        .password-screen input:focus { outline: none; border-color: rgba(255,255,255,0.5); box-shadow: 0 0 20px rgba(255,255,255,0.1); }
+        .password-screen input:focus { 
+            outline: none; border-color: rgba(255,255,255,0.5); 
+            box-shadow: 0 0 20px rgba(255,255,255,0.1);
+        }
         
-        /* Слайдшоу */
-        .slideshow { position: fixed; top: 0; left: 0; width: 100vw; height: 100vh; display: none; opacity: 0; transition: opacity 1s; }
+        /* Слайдшоу 35% ЭКРАНА */
+        .slideshow { 
+            position: fixed; top: 50%; left: 50%; 
+            transform: translate(-50%, -50%); 
+            width: 35vw; height: 35vh; 
+            display: none; opacity: 0; transition: opacity 1s; 
+        }
         .slideshow.active { display: block; opacity: 1; }
-        .slideshow img { width: 100vw; height: 100vh; object-fit: cover; opacity: 0; transition: opacity 3s ease-in-out; }
+        .slideshow img { 
+            width: 100%; height: 100%; 
+            object-fit: cover; border-radius: 10px; 
+            opacity: 0; transition: opacity 3s ease-in-out; 
+            box-shadow: 0 20px 60px rgba(0,0,0,0.8); 
+        }
         .slideshow img.active { opacity: 1; }
     </style>
 </head>
 <body>
-    <!-- Пароль -->
+    <!-- Пароль "амина" -->
     <div class="password-screen" id="passwordScreen">
         <h1>Саша</h1>
         <input type="password" id="passwordInput" placeholder="пароль" maxlength="10" autocomplete="off">
     </div>
 
-    <!-- Слайдшоу s1-s5 -->
+    <!-- Слайдшоу s1-s5 (35% экрана) -->
     <div class="slideshow" id="slideshow">
         <img src="assets/s1.jpeg" class="active">
         <img src="assets/s2.jpeg">
@@ -50,47 +70,51 @@
         const photos = document.querySelectorAll('.slideshow img');
         let audioContext, audioBuffer, isPlaying = false;
 
-        // Загружаем аудио
+        // Загрузка song1.mp3
         fetch('assets/song1.mp3')
             .then(response => response.arrayBuffer())
-            .then(arrayBuffer => audioContext ? audioContext.decodeAudioData(arrayBuffer) : 
-                (audioContext = new (window.AudioContext || window.webkitAudioContext)()).decodeAudioData(arrayBuffer))
+            .then(arrayBuffer => {
+                if (!audioContext) {
+                    audioContext = new (window.AudioContext || window.webkitAudioContext)();
+                }
+                return audioContext.decodeAudioData(arrayBuffer);
+            })
             .then(buffer => {
                 audioBuffer = buffer;
-            });
+            })
+            .catch(err => console.log('Audio load error:', err));
 
-        // Пароль "амина"
+        // Проверка пароля
         passwordInput.addEventListener('keypress', (e) => {
             if (e.key === 'Enter') {
                 if (passwordInput.value === 'амина') {
                     passwordScreen.style.display = 'none';
                     slideshow.classList.add('active');
-                    
-                    // Играем 20 секунд музыки
                     play20Seconds();
                 } else {
                     passwordInput.value = '';
                     passwordInput.style.borderColor = 'rgba(255,100,100,0.5)';
-                    setTimeout(() => passwordInput.style.borderColor = 'rgba(255,255,255,0.2)', 500);
+                    setTimeout(() => {
+                        passwordInput.style.borderColor = 'rgba(255,255,255,0.2)';
+                    }, 500);
                 }
             }
         });
 
+        // Играем 20 секунд музыки + слайдер
         function play20Seconds() {
             if (!audioBuffer || isPlaying) return;
             
             isPlaying = true;
             const source = audioContext.createBufferSource();
             source.buffer = audioBuffer;
-            
-            // 20 секунд = 20,000 мс
-            source.stop(audioContext.currentTime + 20);
+            source.stop(audioContext.currentTime + 20); // 20 секунд
             source.connect(audioContext.destination);
             source.start(0);
             
-            // Синхронный слайдер каждые 4 секунды (5 фото)
+            // Фото каждые 4 секунды (5 фото = 20 сек)
             let currentPhoto = 0;
-            const interval = 4000; // 4 сек x 5 = 20 сек
+            const interval = 4000; // 4 секунды
             
             const slideInterval = setInterval(() => {
                 photos[currentPhoto].classList.remove('active');
@@ -98,15 +122,15 @@
                 photos[currentPhoto].classList.add('active');
             }, interval);
             
-            // Останавливаем через 20 сек
+            // Стоп через 20 секунд
             setTimeout(() => {
                 clearInterval(slideInterval);
                 isPlaying = false;
             }, 20000);
         }
 
+        // Фокус на поле ввода
         passwordInput.focus();
     </script>
 </body>
 </html>
-
