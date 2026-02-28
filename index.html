@@ -80,7 +80,7 @@
         }
         .countdown-label { font-size: 1rem; opacity: 0.8; margin-top: 5px; }
         
-        /* ПАСХАЛКА - БЕЗ ПАРОЛЯ, 70% РАЗМЕР */
+        /* ПАСХАЛКА - 70% РАЗМЕР */
         .slideshow { 
             position: fixed; top: 50%; left: 50%; transform: translate(-50%, -50%); 
             width: 70vw; height: 70vh; max-width: 1000px; max-height: 700px;
@@ -108,7 +108,7 @@
             transform: scale(0.95); filter: brightness(0.8); 
         }
         
-        /* ТРОЛЛФЕЙС НА КАЖДОЙ ФОТО */
+        /* РАДУЖНЫЙ ТРОЛЛФЕЙС НА КАЖДОЙ ФОТО */
         .troll-overlay {
             position: absolute;
             top: 15%; left: 20%;
@@ -117,7 +117,7 @@
             background-repeat: no-repeat;
             background-position: center;
             opacity: 0;
-            transition: all 0.6s ease;
+            transition: all 0.8s ease;
             pointer-events: none;
             z-index: 20;
         }
@@ -129,28 +129,28 @@
 
         @keyframes trollRainbow {
             0% { 
-                transform: scale(0.7) rotate(0deg); 
-                filter: hue-rotate(0deg) brightness(1.3) saturate(2);
+                transform: scale(0.6) rotate(0deg); 
+                filter: hue-rotate(0deg) brightness(1.4) saturate(2.5);
             }
-            20% { 
-                transform: scale(1.1) rotate(90deg); 
-                filter: hue-rotate(90deg) brightness(1.6) saturate(2.5);
+            16% { 
+                transform: scale(1.0) rotate(72deg); 
+                filter: hue-rotate(72deg) brightness(1.6) saturate(3);
             }
-            40% { 
-                transform: scale(1.3) rotate(180deg); 
-                filter: hue-rotate(180deg) brightness(1.8) saturate(3);
+            33% { 
+                transform: scale(1.3) rotate(144deg); 
+                filter: hue-rotate(144deg) brightness(1.8) saturate(3.5);
             }
-            60% { 
-                transform: scale(1.2) rotate(270deg); 
-                filter: hue-rotate(270deg) brightness(1.7) saturate(2.8);
+            50% { 
+                transform: scale(1.5) rotate(216deg); 
+                filter: hue-rotate(216deg) brightness(2.0) saturate(4);
             }
-            80% { 
-                transform: scale(1.4) rotate(360deg); 
-                filter: hue-rotate(360deg) brightness(2) saturate(3.2);
+            66% { 
+                transform: scale(1.2) rotate(288deg); 
+                filter: hue-rotate(288deg) brightness(1.9) saturate(3.8);
             }
             100% { 
-                transform: scale(0.8) rotate(720deg); 
-                filter: hue-rotate(0deg) brightness(1.4) saturate(2);
+                transform: scale(0.8) rotate(360deg); 
+                filter: hue-rotate(360deg) brightness(1.5) saturate(3);
             }
         }
         
@@ -230,7 +230,7 @@
         </div>
     </div>
 
-    <!-- ВКЛАДКА 1: ПАСХАЛКА БЕЗ ПАРОЛЯ -->
+    <!-- ВКЛАДКА 1: ПАСХАЛКА -->
     <div id="tab1" class="tab-content">
         <div class="slideshow" id="slideshow">
             <img src="assets/s1.jpeg" class="slide active">
@@ -286,11 +286,13 @@
         let gameInterval;
         let slideIndex = 0;
         let slideshowInterval;
+        let musicPlayer;
 
         // ГЛАВНЫЙ ПАРОЛЬ
         const mainPassword = document.getElementById('mainPassword');
         const welcomeScreen = document.getElementById('welcomeScreen');
         const nav = document.getElementById('nav');
+        musicPlayer = document.getElementById('music');
 
         mainPassword.focus();
         mainPassword.addEventListener('keypress', (e) => {
@@ -330,7 +332,7 @@
             document.getElementById('seconds').textContent = seconds.toString().padStart(2, '0');
         }
 
-        // НАВИГАЦИЯ + АВТОЗАПУСК ПАСХАЛКИ
+        // НАВИГАЦИЯ
         function switchTab(tab) {
             if (!isSiteUnlocked) return;
             
@@ -341,32 +343,44 @@
             document.querySelectorAll('.nav-btn')[tab].classList.add('active');
             currentTab = tab;
             
-            // АВТОЗАПУСК ПАСХАЛКИ
+            // ТОЧНО 20 СЕКУНД МУЗЫКИ + 5 ФОТО x 4с
             if (tab === 1) {
                 startEasterEgg();
             }
         }
 
-        // ПАСХАЛКА - ТРОЛЛФЕЙС НА КАЖДОЙ ФОТО
+        // ПАСХАЛКА - ТОЧНО 20 СЕКУНД
         function startEasterEgg() {
             const slideshow = document.getElementById('slideshow');
             
-            // Устанавливаем фон t.jpeg для всех троллов
-            document.querySelectorAll('.troll-overlay').forEach(troll => {
+            // Устанавливаем t.jpeg для всех троллов
+            document.querySelectorAll('.troll-overlay').forEach((troll, index) => {
                 troll.style.backgroundImage = 'url("assets/t.jpeg")';
             });
             
             slideshow.classList.add('show');
+            
+            // МУЗЫКА 20 СЕКУНД
+            musicPlayer.currentTime = 0;
+            musicPlayer.volume = 0.4;
+            musicPlayer.play().catch(() => {});
+            
+            // 5 ФОТО x 4 секунды = 20 секунд
             showSlide(0);
-            
             slideshowInterval = setInterval(() => {
-                nextSlide();
-            }, 4500);
+                slideIndex++;
+                if (slideIndex < 5) {
+                    showSlide(slideIndex);
+                }
+            }, 4000);
             
-            // Остановка через 30 секунд
+            // СТОЧНО 20 СЕКУНД ПОСЛЕ ЗАПУСКА
             setTimeout(() => {
                 clearInterval(slideshowInterval);
-            }, 30000);
+                musicPlayer.pause();
+                musicPlayer.currentTime = 0;
+                slideshow.classList.remove('show');
+            }, 20000);
         }
 
         function showSlide(n) {
@@ -374,11 +388,6 @@
             slides.forEach((slide, i) => {
                 slide.classList.toggle('active', i === n);
             });
-        }
-
-        function nextSlide() {
-            slideIndex = (slideIndex + 1) % 5;
-            showSlide(slideIndex);
         }
 
         // МЕЛЛСТРОЙНОСТЬ
