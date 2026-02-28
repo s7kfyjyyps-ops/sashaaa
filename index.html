@@ -12,7 +12,7 @@
             color: white; overflow: hidden; position: relative;
         }
         
-        /* ПЕРВЫЙ ЭКРАН - ГЛАВНЫЙ ПАРОЛЬ */
+        /* ПЕРВЫЙ ЭКРАН - ПРОСТОЙ ПАРОЛЬ */
         .welcome-screen { 
             position: fixed; top: 0; left: 0; right: 0; bottom: 0; 
             display: flex; flex-direction: column; justify-content: center; align-items: center; 
@@ -20,14 +20,9 @@
         }
         .welcome-screen.hidden { display: none; }
         .welcome-title { 
-            font-size: clamp(4rem, 25vw, 80vh); font-weight: 200; 
-            letter-spacing: -4px; margin-bottom: 4rem; 
-            background: linear-gradient(135deg, #fff, #ffeb3b, #fff); 
-            -webkit-background-clip: text; -webkit-text-fill-color: transparent;
-            text-shadow: 0 0 60px rgba(255,255,255,0.6);
-            animation: glow 2s ease-in-out infinite alternate;
+            font-size: 3rem; font-weight: 300; margin-bottom: 4rem; 
+            color: white;
         }
-        @keyframes glow { from { filter: drop-shadow(0 0 20px #fff); } to { filter: drop-shadow(0 0 40px #ffeb3b); } }
         .welcome-input { 
             width: 90vw; max-width: 500px; padding: 30px; 
             background: rgba(255,255,255,0.1); border: 4px solid rgba(255,255,255,0.3); 
@@ -41,17 +36,17 @@
             box-shadow: 0 30px 100px rgba(255,235,59,0.4); transform: translateY(-10px) scale(1.02);
         }
         
-        /* НАВИГАЦИЯ */
+        /* НАВИГАЦИЯ - УМЕНЬШЕННЫЙ ШРИФТ */
         .nav { 
             position: fixed; top: 0; left: 0; right: 0; 
             display: none; background: rgba(0,0,0,0.9); 
-            backdrop-filter: blur(20px); z-index: 2000; padding: 15px 0;
+            backdrop-filter: blur(20px); z-index: 2000; padding: 10px 0;
         }
         .nav.show { display: flex; }
         .nav-btn { 
-            flex: 1; padding: 15px; background: none; 
-            border: none; color: white; font-size: 1.1rem; 
-            cursor: pointer; transition: all 0.3s;
+            flex: 1; padding: 12px 8px; background: none; 
+            border: none; color: white; font-size: 0.85rem;
+            cursor: pointer; transition: all 0.3s; white-space: nowrap;
         }
         .nav-btn.active { 
             background: rgba(255,255,255,0.2); 
@@ -61,7 +56,7 @@
         
         /* ВКЛАДКИ */
         .tab-content { 
-            display: none; height: 100vh; padding-top: 120px; 
+            display: none; height: 100vh; padding-top: 70px;
             justify-content: center; align-items: center; flex-direction: column;
         }
         .tab-content.active { display: flex; }
@@ -141,15 +136,15 @@
         .game-score { font-size: 2.5rem; margin-bottom: 1.5rem; }
         .game-start { font-size: 4rem; cursor: pointer; }
         
-        /* ТРОЛЛФЕЙС */
+        /* ТРОЛЛФЕЙС - ЦВЕТНЫЙ */
         .trollface { 
             position: fixed; width: 200px; height: 200px; opacity: 0; 
-            pointer-events: none; z-index: 1000; background-size: contain; 
+            pointer-events: none; z-index: 4000; background-size: contain; 
             background-repeat: no-repeat; background-position: center;
         }
         @keyframes evilTroll { 
             0% { opacity: 0; transform: scale(0.1) rotate(0); } 
-            50% { transform: scale(2) rotate(720deg); filter: brightness(2) drop-shadow(0 0 60px #ff0000); } 
+            50% { transform: scale(2) rotate(720deg); filter: brightness(1.5) saturate(2) drop-shadow(0 0 60px #ff00ff); } 
             100% { opacity: 0; transform: scale(0.3) rotate(1440deg); } 
         }
         
@@ -157,13 +152,13 @@
     </style>
 </head>
 <body>
-    <!-- 1. ПЕРВЫЙ ЭКРАН - СЕКРЕТНЫЙ ПАРОЛЬ -->
+    <!-- 1. ПРОСТОЙ ПАРОЛЬ -->
     <div class="welcome-screen" id="welcomeScreen">
         <h1 class="welcome-title">секретное слово</h1>
         <input class="welcome-input" id="mainPassword" type="password" placeholder="введи пароль" maxlength="10" autocomplete="off">
     </div>
 
-    <!-- НАВИГАЦИЯ (показывается ПОСЛЕ пароля) -->
+    <!-- НАВИГАЦИЯ -->
     <div class="nav" id="nav">
         <button class="nav-btn active" onclick="switchTab(0)">Главная</button>
         <button class="nav-btn" onclick="switchTab(1)">Пасхалка</button>
@@ -252,7 +247,7 @@
         let slideIndex = 0;
         let slideshowInterval;
 
-        // 1. ГЛАВНЫЙ ПАРОЛЬ (секретное слово)
+        // ГЛАВНЫЙ ПАРОЛЬ
         const mainPassword = document.getElementById('mainPassword');
         const welcomeScreen = document.getElementById('welcomeScreen');
         const nav = document.getElementById('nav');
@@ -307,11 +302,11 @@
             currentTab = tab;
         }
 
-        // ТРОЛЛФЕЙС
+        // ТРОЛЛФЕЙС - t.jpeg
         function createEvilTroll() {
             const troll = document.createElement('div');
             troll.className = 'trollface';
-            troll.style.backgroundImage = 'url("assets/t1.jpeg")';
+            troll.style.backgroundImage = 'url("assets/t.jpeg")';
             troll.style.left = (Math.random() * 70 + 15) + '%';
             troll.style.top = (Math.random() * 50 + 15) + '%';
             document.body.appendChild(troll);
@@ -319,7 +314,7 @@
             setTimeout(() => troll.remove(), 2000);
         }
 
-        // ПАСХАЛКА (вкладка 1)
+        // ПАСХАЛКА
         const passwordInput = document.getElementById('passwordInput');
         const passwordScreen = document.getElementById('passwordScreen');
         const slideshow = document.getElementById('slideshow');
@@ -351,7 +346,7 @@
             createEvilTroll();
             showSlide(0);
             slideshowInterval = setInterval(() => {
-                createEvilTroll();
+                createEvilTroll(); // Троллфейс ПРИ КАЖДОМ переключении фото
                 nextSlide();
             }, 4000);
             setTimeout(() => {
@@ -370,7 +365,7 @@
             showSlide(slideIndex);
         }
 
-        // МЕЛЛСТРОЙНОСТЬ БЕЗ ПОДПИСЕЙ + ЗВУК ПО КЛИКУ
+        // МЕЛЛСТРОЙНОСТЬ
         const videos = ['video1', 'video2', 'video3'];
         videos.forEach((videoId, index) => {
             const video = document.getElementById(videoId);
@@ -388,18 +383,19 @@
                 btn.classList.toggle('winner', i === winnerIndex);
             });
             
-            // ВКЛЮЧАЕМ ЗВУК ПО КЛИКУ
             const clickedVideo = document.getElementById(videos[videoIndex]);
             clickedVideo.muted = false;
+            clickedVideo.currentTime = 0;
             clickedVideo.play();
-            setTimeout(() => {
-                clickedVideo.currentTime = 0;
+            
+            clickedVideo.onended = () => {
                 clickedVideo.pause();
                 clickedVideo.muted = true;
-            }, 3000);
+                clickedVideo.currentTime = 0;
+            };
         }
 
-        // ИГРА - ИСПРАВЛЕНА
+        // ИГРА
         function startFallingGame() {
             const game = document.getElementById('fallingGame');
             game.innerHTML = '';
