@@ -12,7 +12,7 @@
             color: white; overflow: hidden; position: relative;
         }
         
-        /* ПЕРВЫЙ ЭКРАН - ПАРОЛЬ */
+        /* ПЕРВЫЙ ЭКРАН - ГЛАВНЫЙ ПАРОЛЬ */
         .welcome-screen { 
             position: fixed; top: 0; left: 0; right: 0; bottom: 0; 
             display: flex; flex-direction: column; justify-content: center; align-items: center; 
@@ -41,12 +41,33 @@
             box-shadow: 0 30px 100px rgba(255,235,59,0.4); transform: translateY(-10px) scale(1.02);
         }
         
-        /* ГЛАВНАЯ С СЧЕТЧИКОМ */
-        .main-screen { 
-            display: none; height: 100vh; justify-content: center; align-items: center; 
-            text-align: center; flex-direction: column; padding-top: 100px;
+        /* НАВИГАЦИЯ */
+        .nav { 
+            position: fixed; top: 0; left: 0; right: 0; 
+            display: none; background: rgba(0,0,0,0.9); 
+            backdrop-filter: blur(20px); z-index: 2000; padding: 15px 0;
         }
-        .main-screen.active { display: flex; }
+        .nav.show { display: flex; }
+        .nav-btn { 
+            flex: 1; padding: 15px; background: none; 
+            border: none; color: white; font-size: 1.1rem; 
+            cursor: pointer; transition: all 0.3s;
+        }
+        .nav-btn.active { 
+            background: rgba(255,255,255,0.2); 
+            box-shadow: 0 5px 20px rgba(255,255,255,0.1);
+        }
+        .nav-btn:hover { background: rgba(255,255,255,0.1); }
+        
+        /* ВКЛАДКИ */
+        .tab-content { 
+            display: none; height: 100vh; padding-top: 120px; 
+            justify-content: center; align-items: center; flex-direction: column;
+        }
+        .tab-content.active { display: flex; }
+        
+        /* ГЛАВНАЯ С СЧЕТЧИКОМ */
+        .main-screen { text-align: center; }
         .countdown-title { 
             font-size: clamp(2.5rem, 10vw, 5rem); font-weight: 300; 
             margin-bottom: 3rem; background: linear-gradient(135deg, #fff, #ffeb3b); 
@@ -64,34 +85,8 @@
         }
         .countdown-label { font-size: 1rem; opacity: 0.8; margin-top: 5px; }
         
-        /* НАВИГАЦИЯ */
-        .nav { 
-            position: fixed; top: 0; left: 0; right: 0; 
-            display: flex; background: rgba(0,0,0,0.9); 
-            backdrop-filter: blur(20px); z-index: 2000; padding: 15px 0;
-        }
-        .nav-btn { 
-            flex: 1; padding: 15px; background: none; 
-            border: none; color: white; font-size: 1.1rem; 
-            cursor: pointer; transition: all 0.3s;
-        }
-        .nav-btn.active { 
-            background: rgba(255,255,255,0.2); 
-            box-shadow: 0 5px 20px rgba(255,255,255,0.1);
-        }
-        .nav-btn:hover { background: rgba(255,255,255,0.1); }
-        
-        /* ВКЛАДКИ */
-        .tab-content { 
-            display: none; height: 100vh; padding-top: 120px; 
-        }
-        .tab-content.active { display: flex; justify-content: center; align-items: center; flex-direction: column; }
-        
-        /* ПАСХАЛКА - УПРОЩЕННАЯ */
-        .password-screen { 
-            text-align: center; max-width: 500px; width: 90vw; 
-            display: flex; flex-direction: column; justify-content: center; align-items: center; height: 100%;
-        }
+        /* ПАСХАЛКА */
+        .password-screen { text-align: center; max-width: 500px; width: 90vw; }
         .password-screen h1 { 
             font-size: clamp(4rem, 20vw, 70vh); font-weight: 200; 
             letter-spacing: -3px; margin-bottom: 3rem; 
@@ -122,42 +117,62 @@
         .voting { text-align: center; max-width: 800px; width: 90vw; padding: 20px; }
         .voting h2 { font-size: clamp(2rem, 8vw, 4rem); margin-bottom: 2rem; }
         .video-options { display: flex; gap: 20px; flex-wrap: wrap; justify-content: center; }
-        .video-btn { width: 280px; height: 160px; background: rgba(255,255,255,0.1); border: 2px solid rgba(255,255,255,0.3); border-radius: 15px; cursor: pointer; transition: all 0.3s; position: relative; overflow: hidden; display: flex; align-items: center; justify-content: center; }
+        .video-btn { 
+            width: 280px; height: 160px; background: rgba(255,255,255,0.1); 
+            border: 2px solid rgba(255,255,255,0.3); border-radius: 15px; 
+            cursor: pointer; transition: all 0.3s; position: relative; overflow: hidden;
+            display: flex; align-items: center; justify-content: center;
+        }
         .video-btn:hover { transform: translateY(-10px); box-shadow: 0 20px 40px rgba(0,0,0,0.5); }
         .video-btn.winner { background: rgba(0,255,0,0.3); border-color: #00ff00; animation: pulse 1s infinite; }
         @keyframes pulse { 0%, 100% { box-shadow: 0 0 20px #00ff00; } 50% { box-shadow: 0 0 40px #00ff00; } }
         .video-btn video { width: 100%; height: 100%; object-fit: cover; border-radius: 13px; }
-        .video-btn span { position: absolute; bottom: 10px; left: 50%; transform: translateX(-50%); font-weight: bold; background: rgba(0,0,0,0.7); padding: 5px 10px; border-radius: 10px; }
         
         /* ИГРА */
         .falling-game { position: relative; width: 100%; height: 70vh; overflow: hidden; }
-        .falling-photo { position: absolute; width: 120px; height: 120px; background-size: cover; border-radius: 15px; cursor: pointer; transition: all 0.2s; box-shadow: 0 10px 30px rgba(0,0,0,0.5); animation: fall 5s linear infinite; }
+        .falling-photo { 
+            position: absolute; width: 120px; height: 120px; background-size: cover; 
+            border-radius: 15px; cursor: pointer; transition: all 0.2s; 
+            box-shadow: 0 10px 30px rgba(0,0,0,0.5); animation: fall 5s linear infinite; 
+        }
         .falling-photo:hover { transform: scale(1.15); filter: brightness(1.4); }
         @keyframes fall { from { transform: translateY(-100px); } to { transform: translateY(100vh); } }
+        .game-controls { text-align: center; margin-top: 1rem; }
+        .game-score { font-size: 2.5rem; margin-bottom: 1.5rem; }
+        .game-start { font-size: 4rem; cursor: pointer; }
         
         /* ТРОЛЛФЕЙС */
-        .trollface { position: fixed; width: 200px; height: 200px; opacity: 0; pointer-events: none; z-index: 1000; background-size: contain; background-repeat: no-repeat; background-position: center; }
-        @keyframes evilTroll { 0% { opacity: 0; transform: scale(0.1) rotate(0); } 50% { transform: scale(2) rotate(720deg); filter: brightness(2) drop-shadow(0 0 60px #ff0000); } 100% { opacity: 0; transform: scale(0.3) rotate(1440deg); } }
+        .trollface { 
+            position: fixed; width: 200px; height: 200px; opacity: 0; 
+            pointer-events: none; z-index: 1000; background-size: contain; 
+            background-repeat: no-repeat; background-position: center;
+        }
+        @keyframes evilTroll { 
+            0% { opacity: 0; transform: scale(0.1) rotate(0); } 
+            50% { transform: scale(2) rotate(720deg); filter: brightness(2) drop-shadow(0 0 60px #ff0000); } 
+            100% { opacity: 0; transform: scale(0.3) rotate(1440deg); } 
+        }
         
         audio { display: none; }
     </style>
 </head>
 <body>
-    <!-- ПЕРВЫЙ ЭКРАН - ГЛАВНЫЙ ПАРОЛЬ -->
+    <!-- 1. ПЕРВЫЙ ЭКРАН - СЕКРЕТНЫЙ ПАРОЛЬ -->
     <div class="welcome-screen" id="welcomeScreen">
-        <h1 class="welcome-title">Саша</h1>
-        <input class="welcome-input" id="mainPassword" type="password" placeholder="главный пароль" maxlength="10" autocomplete="off">
+        <h1 class="welcome-title">секретное слово</h1>
+        <input class="welcome-input" id="mainPassword" type="password" placeholder="введи пароль" maxlength="10" autocomplete="off">
     </div>
 
-    <!-- НАВИГАЦИЯ (показывается после пароля) -->
-    <div class="nav" id="nav" style="display: none;">
-        <button class="nav-btn active" onclick="switchTab(0)">Пасхалка</button>
-        <button class="nav-btn" onclick="switchTab(1)">Меллстройность</button>
-        <button class="nav-btn" onclick="switchTab(2)">Игра</button>
+    <!-- НАВИГАЦИЯ (показывается ПОСЛЕ пароля) -->
+    <div class="nav" id="nav">
+        <button class="nav-btn active" onclick="switchTab(0)">Главная</button>
+        <button class="nav-btn" onclick="switchTab(1)">Пасхалка</button>
+        <button class="nav-btn" onclick="switchTab(2)">Меллстройность</button>
+        <button class="nav-btn" onclick="switchTab(3)">Игра</button>
     </div>
 
-    <!-- ГЛАВНАЯ С СЧЕТЧИКОМ (теперь как вкладка 3) -->
-    <div id="tab3" class="tab-content active">
+    <!-- ВКЛАДКА 0: ГЛАВНАЯ со счетчиком -->
+    <div id="tab0" class="tab-content active">
         <div class="main-screen">
             <div class="countdown-title">До апрельских каникул и самокатов осталось:</div>
             <div class="countdown">
@@ -182,7 +197,7 @@
     </div>
 
     <!-- ВКЛАДКА 1: ПАСХАЛКА -->
-    <div id="tab0" class="tab-content">
+    <div id="tab1" class="tab-content">
         <div class="password-screen" id="passwordScreen">
             <h1>секретное слово</h1>
             <input type="password" id="passwordInput" placeholder="введи пароль" maxlength="10" autocomplete="off">
@@ -197,20 +212,18 @@
     </div>
 
     <!-- ВКЛАДКА 2: МЕЛЛСТРОЙНОСТЬ -->
-    <div id="tab1" class="tab-content">
+    <div id="tab2" class="tab-content">
         <div class="voting">
             <h2>🗳️ Лучшая меллстройность</h2>
             <div class="video-options">
                 <div class="video-btn" onclick="vote(0)">
-                    <video src="assets/v1.mp4" muted loop></video>
-                    <span>v1</span>
+                    <video id="video1" src="assets/v1.mp4" muted loop preload="metadata"></video>
                 </div>
                 <div class="video-btn" onclick="vote(1)">
-                    <video src="assets/v2.mp4" muted loop></video>
-                    <span>v2</span>
+                    <video id="video2" src="assets/v2.mp4" muted loop preload="metadata"></video>
                 </div>
                 <div class="video-btn" onclick="vote(2)">
-                    <video src="assets/v3.mp4" muted loop></video>
+                    <video id="video3" src="assets/v3.mp4" muted loop preload="metadata"></video>
                 </div>
             </div>
             <div style="margin-top: 2rem; font-size: 1.8rem;">
@@ -220,26 +233,26 @@
     </div>
 
     <!-- ВКЛАДКА 3: ИГРА -->
-    <div id="tab2" class="tab-content">
+    <div id="tab3" class="tab-content">
         <div class="falling-game" id="fallingGame"></div>
-        <div style="text-align: center; margin-top: 1rem;">
-            <div style="font-size: 2.5rem; margin-bottom: 1.5rem;">Счёт: <span id="fallingScore">0</span></div>
-            <div style="font-size: 4rem; cursor: pointer;" onclick="startFallingGame()" title="Начать игру">🎮</div>
+        <div class="game-controls">
+            <div class="game-score">Счёт: <span id="fallingScore">0</span></div>
+            <div class="game-start" onclick="startFallingGame()" title="Начать игру">🎮</div>
         </div>
     </div>
     
     <audio id="music" src="assets/song1.mp3" preload="auto"></audio>
 
     <script>
-        let isUnlocked = false;
-        let currentTab = 3; // Начинаем с главной вкладки (tab3)
+        let isSiteUnlocked = false;
+        let currentTab = 0;
         let votes = [0, 0, 0];
         let fallingScore = 0;
         let gameInterval;
         let slideIndex = 0;
-        let interval;
+        let slideshowInterval;
 
-        // ГЛАВНЫЙ ПАРОЛЬ
+        // 1. ГЛАВНЫЙ ПАРОЛЬ (секретное слово)
         const mainPassword = document.getElementById('mainPassword');
         const welcomeScreen = document.getElementById('welcomeScreen');
         const nav = document.getElementById('nav');
@@ -249,11 +262,10 @@
             if (e.key === 'Enter') {
                 if (mainPassword.value === 'амина') {
                     welcomeScreen.classList.add('hidden');
-                    nav.style.display = 'flex';
-                    isUnlocked = true;
+                    nav.classList.add('show');
+                    isSiteUnlocked = true;
                     updateCountdown();
                     setInterval(updateCountdown, 1000);
-                    switchTab(3); // Показываем главную вкладку
                 } else {
                     mainPassword.value = '';
                     mainPassword.style.borderColor = '#ff6b6b';
@@ -266,7 +278,7 @@
             }
         });
 
-        // СЧЕТЧИК ДО 30 МАРТА
+        // СЧЕТЧИК
         function updateCountdown() {
             const targetDate = new Date('2026-03-30T00:00:00').getTime();
             const now = new Date().getTime();
@@ -283,40 +295,36 @@
             document.getElementById('seconds').textContent = seconds.toString().padStart(2, '0');
         }
 
-        // НАВИГАЦИЯ - ИСПРАВЛЕНА
+        // НАВИГАЦИЯ
         function switchTab(tab) {
-            if (!isUnlocked && tab !== 3) return; // Только главная вкладка доступна без пароля
+            if (!isSiteUnlocked) return;
             
-            // Скрываем все вкладки
             document.querySelectorAll('.tab-content').forEach(t => t.classList.remove('active'));
-            // Убираем active у всех кнопок
             document.querySelectorAll('.nav-btn').forEach(b => b.classList.remove('active'));
             
-            // Показываем нужную вкладку
             document.getElementById(`tab${tab}`).classList.add('active');
-            // Активируем соответствующую кнопку
             document.querySelectorAll('.nav-btn')[tab].classList.add('active');
-            
             currentTab = tab;
         }
 
-        // ПАСХАЛКА
+        // ТРОЛЛФЕЙС
+        function createEvilTroll() {
+            const troll = document.createElement('div');
+            troll.className = 'trollface';
+            troll.style.backgroundImage = 'url("assets/t1.jpeg")';
+            troll.style.left = (Math.random() * 70 + 15) + '%';
+            troll.style.top = (Math.random() * 50 + 15) + '%';
+            document.body.appendChild(troll);
+            troll.style.animation = 'evilTroll 2s ease-out forwards';
+            setTimeout(() => troll.remove(), 2000);
+        }
+
+        // ПАСХАЛКА (вкладка 1)
         const passwordInput = document.getElementById('passwordInput');
         const passwordScreen = document.getElementById('passwordScreen');
         const slideshow = document.getElementById('slideshow');
         const slides = document.querySelectorAll('.slide');
         const music = document.getElementById('music');
-
-        function createEvilTroll() {
-            const troll = document.createElement('div');
-            troll.className = 'trollface';
-            troll.style.backgroundImage = 'url("assets/t.jpeg")';
-            troll.style.left = (Math.random() * 70 + 15) + '%';
-            troll.style.top = (Math.random() * 50 + 15) + '%';
-            document.body.appendChild(troll);
-            setTimeout(() => troll.remove(), 2000);
-            troll.style.animation = 'evilTroll 2s ease-out forwards';
-        }
 
         passwordInput.addEventListener('keypress', (e) => {
             if (e.key === 'Enter') {
@@ -338,15 +346,16 @@
 
         function playShow() {
             music.currentTime = 0;
+            music.volume = 0.3;
             music.play().catch(() => {});
             createEvilTroll();
             showSlide(0);
-            interval = setInterval(() => {
+            slideshowInterval = setInterval(() => {
                 createEvilTroll();
                 nextSlide();
             }, 4000);
             setTimeout(() => {
-                clearInterval(interval);
+                clearInterval(slideshowInterval);
                 music.pause();
                 music.currentTime = 0;
             }, 20000);
@@ -361,21 +370,36 @@
             showSlide(slideIndex);
         }
 
-        // МЕЛЛСТРОЙНОСТЬ
-        document.querySelectorAll('.video-btn video').forEach(video => {
+        // МЕЛЛСТРОЙНОСТЬ БЕЗ ПОДПИСЕЙ + ЗВУК ПО КЛИКУ
+        const videos = ['video1', 'video2', 'video3'];
+        videos.forEach((videoId, index) => {
+            const video = document.getElementById(videoId);
             video.addEventListener('mouseenter', () => video.play());
             video.addEventListener('mouseleave', () => video.pause());
         });
 
-        function vote(video) {
-            votes[video]++;
+        function vote(videoIndex) {
+            votes[videoIndex]++;
             const maxVotes = Math.max(...votes);
             const winnerIndex = votes.indexOf(maxVotes);
-            document.getElementById('winner').textContent = `v${winnerIndex + 1} (${maxVotes} голосов)`;
-            document.querySelectorAll('.video-btn').forEach((btn, i) => btn.classList.toggle('winner', i === winnerIndex));
+            document.getElementById('winner').textContent = `Видео ${winnerIndex + 1} (${maxVotes} голосов)`;
+            
+            document.querySelectorAll('.video-btn').forEach((btn, i) => {
+                btn.classList.toggle('winner', i === winnerIndex);
+            });
+            
+            // ВКЛЮЧАЕМ ЗВУК ПО КЛИКУ
+            const clickedVideo = document.getElementById(videos[videoIndex]);
+            clickedVideo.muted = false;
+            clickedVideo.play();
+            setTimeout(() => {
+                clickedVideo.currentTime = 0;
+                clickedVideo.pause();
+                clickedVideo.muted = true;
+            }, 3000);
         }
 
-        // ИГРА
+        // ИГРА - ИСПРАВЛЕНА
         function startFallingGame() {
             const game = document.getElementById('fallingGame');
             game.innerHTML = '';
@@ -392,13 +416,19 @@
                 game.appendChild(photo);
                 
                 photo.onclick = () => {
-                    photo.remove();
+                    photo.style.transform = 'scale(0.5)';
+                    photo.style.opacity = '0';
+                    setTimeout(() => photo.remove(), 200);
                     fallingScore++;
                     document.getElementById('fallingScore').textContent = fallingScore;
                 };
                 
                 setTimeout(() => {
-                    if (photo.parentNode) photo.remove();
+                    if (photo.parentNode) {
+                        photo.style.transform = 'scale(0.5)';
+                        photo.style.opacity = '0';
+                        setTimeout(() => photo.remove(), 200);
+                    }
                 }, 7000);
             }, 1200);
             
