@@ -10,7 +10,29 @@
             font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
             height: 100vh; background: radial-gradient(circle at center, #1a1a2e 0%, #0a0a0a 70%); 
             color: white; display: flex; justify-content: center; align-items: center;
-            overflow: hidden;
+            overflow: hidden; position: relative;
+        }
+        
+        /* Троллфейсы */
+        .trollface {
+            position: fixed; font-size: 3rem; opacity: 0;
+            pointer-events: none; z-index: 1000;
+            animation: trollPop 1s ease-out forwards;
+            filter: hue-rotate(0deg) drop-shadow(0 0 10px #ffff00);
+        }
+        @keyframes trollPop {
+            0% { 
+                opacity: 0; transform: scale(0) rotate(0deg); 
+                filter: hue-rotate(0deg);
+            }
+            20%, 60% { 
+                opacity: 1; transform: scale(1.2) rotate(180deg); 
+                filter: hue-rotate(90deg) drop-shadow(0 0 20px #ff00ff);
+            }
+            100% { 
+                opacity: 0; transform: scale(0.5) rotate(720deg); 
+                filter: hue-rotate(360deg) drop-shadow(0 0 30px #00ff00);
+            }
         }
         
         .password-screen { 
@@ -99,22 +121,33 @@
         let slideIndex = 0;
         let interval;
 
-        // Фокус на ввод
+        // Создание троллфейса
+        function createTrollface() {
+            const troll = document.createElement('div');
+            troll.className = 'trollface';
+            troll.innerHTML = '🤡';
+            troll.style.left = Math.random() * 90 + '%';
+            troll.style.top = Math.random() * 70 + '%';
+            document.body.appendChild(troll);
+            
+            // Удаляем после анимации
+            setTimeout(() => {
+                if (troll.parentNode) troll.parentNode.removeChild(troll);
+            }, 1000);
+        }
+
         passwordInput.focus();
 
         passwordInput.addEventListener('keypress', (e) => {
             if (e.key === 'Enter') {
                 if (passwordInput.value === 'амина') {
-                    // Скрываем экран пароля
                     passwordScreen.classList.add('hidden');
                     
-                    // Ждём анимацию и показываем слайды
                     setTimeout(() => {
                         slideshow.classList.add('show');
                         setTimeout(playShow, 300);
                     }, 300);
                 } else {
-                    // Ошибка пароля
                     passwordInput.value = '';
                     passwordInput.style.borderColor = '#ff6b6b';
                     passwordInput.style.boxShadow = '0 12px 40px rgba(255,107,107,0.4)';
@@ -127,17 +160,20 @@
         });
 
         function playShow() {
-            // Запуск музыки на 20 секунд
             music.currentTime = 0;
-            music.play().catch(e => {}); // Игнорируем ошибки автозапуска
+            music.play().catch(e => {});
             
-            // Первое фото
+            // Троллфейс + первое фото
+            createTrollface();
             showSlide(0);
             
-            // Переключение каждые 4 секунды (5 фото = 20 сек)
-            interval = setInterval(nextSlide, 4000);
+            // Переключение каждые 4 секунды с троллфейсами
+            interval = setInterval(() => {
+                createTrollface();
+                nextSlide();
+            }, 4000);
             
-            // ТОЧНАЯ остановка через 20 секунд
+            // СТОП через 20 сек
             setTimeout(() => {
                 clearInterval(interval);
                 music.pause();
