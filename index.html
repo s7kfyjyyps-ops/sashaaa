@@ -8,51 +8,87 @@
         * { margin: 0; padding: 0; box-sizing: border-box; }
         body { 
             font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
-            height: 100vh; background: #0a0a0a; color: white; 
-            display: flex; justify-content: center; align-items: center;
+            height: 100vh; background: radial-gradient(circle at center, #1a1a2e 0%, #0a0a0a 70%); 
+            color: white; display: flex; justify-content: center; align-items: center;
             overflow: hidden;
         }
-        .password-screen { text-align: center; max-width: 300px; width: 90vw; }
-        .password-screen h1 { font-size: clamp(2rem, 10vw, 4rem); font-weight: 300; letter-spacing: -1px; margin-bottom: 2rem; opacity: 0.8; }
+        
+        .password-screen { 
+            text-align: center; max-width: 300px; width: 90vw; 
+        }
+        .password-screen h1 { 
+            font-size: clamp(2.5rem, 12vw, 5rem); font-weight: 200; 
+            letter-spacing: -2px; margin-bottom: 2.5rem; 
+            background: linear-gradient(135deg, #fff, #ccc); -webkit-background-clip: text; -webkit-text-fill-color: transparent;
+            text-shadow: 0 0 30px rgba(255,255,255,0.3);
+        }
         .password-screen input { 
-            width: 100%; padding: 15px; background: rgba(255,255,255,0.05); 
-            border: 1px solid rgba(255,255,255,0.2); border-radius: 0; color: white; 
-            font-size: 1.2rem; text-align: center; backdrop-filter: blur(10px);
+            width: 100%; padding: 20px; 
+            background: rgba(255,255,255,0.08); 
+            border: 2px solid rgba(255,255,255,0.15); 
+            border-radius: 15px; color: white; 
+            font-size: 1.4rem; text-align: center; 
+            backdrop-filter: blur(20px); transition: all 0.3s ease;
+            box-shadow: 0 8px 32px rgba(0,0,0,0.3);
         }
         .password-screen input::placeholder { color: rgba(255,255,255,0.4); }
-        .password-screen input:focus { outline: none; border-color: rgba(255,255,255,0.5); box-shadow: 0 0 20px rgba(255,255,255,0.1); }
+        .password-screen input:focus { 
+            outline: none; border-color: rgba(255,255,255,0.6); 
+            box-shadow: 0 12px 40px rgba(255,255,255,0.2);
+            transform: translateY(-2px);
+        }
         .password-screen.hidden { display: none; }
         
         .slideshow { 
-            position: fixed; top: 50%; left: 50%; transform: translate(-50%, -50%); 
-            width: 35vw; height: 35vh; display: none; border-radius: 10px; overflow: hidden;
+            position: fixed; top: 50%; left: 50%; 
+            transform: translate(-50%, -50%); 
+            width: 50vw; height: 50vh; 
+            display: none; border-radius: 25px; 
+            overflow: hidden; box-shadow: 0 30px 100px rgba(0,0,0,0.7);
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(255,255,255,0.1);
         }
-        .slideshow.show { display: block; animation: fadeIn 0.5s; }
-        @keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
+        .slideshow.show { display: block; animation: slideIn 0.8s ease-out; }
+        @keyframes slideIn { 
+            from { opacity: 0; transform: translate(-50%, -60%) scale(0.9); } 
+            to { opacity: 1; transform: translate(-50%, -50%) scale(1); } 
+        }
         
-        .slide { position: absolute; width: 100%; height: 100%; opacity: 0; object-fit: cover; }
-        .slide.active { opacity: 1; transition: opacity 0.8s ease; }
+        .slide { 
+            position: absolute; width: 100%; height: 100%; 
+            object-fit: cover; opacity: 0; 
+            transition: all 1s ease-in-out;
+            border-radius: 25px;
+        }
+        .slide.active { 
+            opacity: 1; 
+            transform: scale(1); 
+            filter: brightness(1.05) contrast(1.1);
+            box-shadow: inset 0 0 50px rgba(255,255,255,0.1);
+        }
+        .slide:not(.active) { 
+            transform: scale(0.95); 
+            filter: brightness(0.8);
+        }
         
         audio { display: none; }
-        .debug { position: fixed; top: 10px; right: 10px; font-size: 12px; color: #ccc; }
     </style>
 </head>
 <body>
     <div class="password-screen" id="passwordScreen">
         <h1>Саша</h1>
-        <input type="password" id="passwordInput" placeholder="пароль" maxlength="10">
+        <input type="password" id="passwordInput" placeholder="пароль" maxlength="10" autocomplete="off">
     </div>
 
     <div class="slideshow" id="slideshow">
-        <img src="assets/s1.jpeg?v=1" class="slide active" onload="console.log('s1 loaded')">
-        <img src="assets/s2.jpeg?v=2" class="slide" onload="console.log('s2 loaded')">
-        <img src="assets/s3.jpeg?v=3" class="slide" onload="console.log('s3 loaded')">
-        <img src="assets/s4.jpeg?v=4" class="slide" onload="console.log('s4 loaded')">
-        <img src="assets/s5.jpeg?v=5" class="slide" onload="console.log('s5 loaded')">
+        <img src="assets/s1.jpeg" class="slide active" alt="Фото 1">
+        <img src="assets/s2.jpeg" class="slide" alt="Фото 2">
+        <img src="assets/s3.jpeg" class="slide" alt="Фото 3">
+        <img src="assets/s4.jpeg" class="slide" alt="Фото 4">
+        <img src="assets/s5.jpeg" class="slide" alt="Фото 5">
     </div>
     
-    <audio id="music" src="assets/song1.mp3?v=1" preload="auto"></audio>
-    <div class="debug" id="debug"></div>
+    <audio id="music" src="assets/song1.mp3" preload="auto"></audio>
 
     <script>
         const passwordInput = document.getElementById('passwordInput');
@@ -60,58 +96,58 @@
         const slideshow = document.getElementById('slideshow');
         const slides = document.querySelectorAll('.slide');
         const music = document.getElementById('music');
-        const debug = document.getElementById('debug');
         let slideIndex = 0;
         let interval;
 
+        // Фокус на ввод
         passwordInput.focus();
-        
-        debug.textContent = 'Готово. Жми "амина"';
 
         passwordInput.addEventListener('keypress', (e) => {
             if (e.key === 'Enter') {
                 if (passwordInput.value === 'амина') {
-                    debug.textContent = 'ОК! Скрываем пароль...';
+                    // Скрываем экран пароля
                     passwordScreen.classList.add('hidden');
                     
+                    // Ждём анимацию и показываем слайды
                     setTimeout(() => {
-                        debug.textContent = 'Показываем слайды...';
                         slideshow.classList.add('show');
-                        
-                        setTimeout(() => {
-                            debug.textContent = 'Запускаем музыку + слайды...';
-                            playShow();
-                        }, 500);
-                    }, 500);
+                        setTimeout(playShow, 300);
+                    }, 300);
                 } else {
+                    // Ошибка пароля
                     passwordInput.value = '';
-                    passwordInput.style.borderColor = '#ff6464';
-                    debug.textContent = 'Неверный пароль!';
+                    passwordInput.style.borderColor = '#ff6b6b';
+                    passwordInput.style.boxShadow = '0 12px 40px rgba(255,107,107,0.4)';
                     setTimeout(() => {
-                        passwordInput.style.borderColor = 'rgba(255,255,255,0.2)';
-                        debug.textContent = 'Готово. Жми "амина"';
-                    }, 500);
+                        passwordInput.style.borderColor = 'rgba(255,255,255,0.15)';
+                        passwordInput.style.boxShadow = '0 8px 32px rgba(0,0,0,0.3)';
+                    }, 300);
                 }
             }
         });
 
         function playShow() {
+            // Запуск музыки на 20 секунд
             music.currentTime = 0;
-            music.play().then(() => {
-                debug.textContent = 'Музыка играет! Слайды: 4 сек интервал';
-            }).catch(e => {
-                debug.textContent = 'Ошибка музыки: ' + e.message;
-            });
+            music.play().catch(e => {}); // Игнорируем ошибки автозапуска
             
+            // Первое фото
             showSlide(0);
+            
+            // Переключение каждые 4 секунды (5 фото = 20 сек)
             interval = setInterval(nextSlide, 4000);
-            setTimeout(() => clearInterval(interval), 20000);
+            
+            // ТОЧНАЯ остановка через 20 секунд
+            setTimeout(() => {
+                clearInterval(interval);
+                music.pause();
+                music.currentTime = 0;
+            }, 20000);
         }
 
         function showSlide(n) {
             slides.forEach((slide, i) => {
                 slide.classList.toggle('active', i === n);
-                if (i === n) debug.textContent += ` s${n+1}`;
             });
         }
 
