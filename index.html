@@ -13,25 +13,34 @@
             overflow: hidden; position: relative;
         }
         
-        /* Троллфейсы */
+        /* НАСТОЯЩИЙ ТРОЛЛФЕЙС */
         .trollface {
-            position: fixed; font-size: 3rem; opacity: 0;
+            position: fixed; width: 120px; height: 120px; opacity: 0;
             pointer-events: none; z-index: 1000;
-            animation: trollPop 1s ease-out forwards;
-            filter: hue-rotate(0deg) drop-shadow(0 0 10px #ffff00);
+            background-image: url("data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iMTIwIiBoZWlnaHQ9IjEyMCIgdmlld0JveD0iMCAwIDEyMCAxMjAiIGZpbGw9Im5vbmUiIHhtbG5zPSJodHRwOi8vd3d3LnczLm9yZy8yMDAwL3N2ZyI+CjxjaXJjbGUgY3g9IjYwIiBjeT0iNjAiIHI9IjYwIiBmaWxsPSIjRkZGRkZGIi8+CjxjaXJjbGUgY3g9IjM4IiBjeT0iNDAiIHI9IjgiIGZpbGw9IiMwMDAwMDAiLz4KPGNpcmNsZSBjeD0iODIiIGN5PSI0MCIgcj0iOCIgZmlsbD0iIzAwMDAwMCIvPgo8cGF0aCBkPSJNMzIgNTBDMjkgNTMgMjYgNTMgMjUgNTVBNCA0IDAgMCAxIDI1IDYzQTQgNCAwIDAgMSAzMiA2N0MyOCAxNjUgMjggMTY1IDMyIDY3WiIgZmlsbD0iIzAwMDAwMCIvPgo8cGF0aCBkPSJNOSAxMTBDNiAxMTMgNCAxMTMgMiAxMTVBNCA0IDAgMCAxIDIgMTIzQTQgNCAwIDAgMSAxMSAxMjFDMTQgMTE5IDE0IDExNyAxMSAxMjEiIGZpbGw9IiMwMDAwMDAiLz4KPHBhdGggZD0iTTY1IDEyMEM2MiAxMjEgNjEgMTIyIDU5IDEyM0E0IDQgMCAwIDEgNTkgMTMxQTQgNCAwIDAgMSAyMiAxMzFBNCA0IDAgMCAxIDIyIDEyM0M0IDEyMiA0IDEyMSA2NSAxMjBaIiBmaWxsPSIjMDAwMDAwIi8+CjxjaXJjbGUgY3g9IjQwIiBjeT0iMzUiIHI9IjMiIGZpbGw9IiNGRkZGRkYiLz4KPGNpcmNsZSBjeD0iODAiIGN5PSIzNSIgcj0iMyIgZmlsbD0iI0ZGRkZGRiIvPgo8L3N2Zz4K");
+            background-size: contain; background-repeat: no-repeat;
+            animation: trollPop 1.2s ease-out forwards;
         }
         @keyframes trollPop {
             0% { 
-                opacity: 0; transform: scale(0) rotate(0deg); 
-                filter: hue-rotate(0deg);
+                opacity: 0; transform: scale(0) rotate(0deg) translateY(0); 
+                filter: hue-rotate(0deg) brightness(1);
             }
-            20%, 60% { 
-                opacity: 1; transform: scale(1.2) rotate(180deg); 
-                filter: hue-rotate(90deg) drop-shadow(0 0 20px #ff00ff);
+            25% { 
+                opacity: 1; transform: scale(1.4) rotate(90deg) translateY(-20px); 
+                filter: hue-rotate(60deg) brightness(1.2) drop-shadow(0 0 20px #ffff00);
+            }
+            50% { 
+                transform: scale(1.6) rotate(360deg) translateY(-40px); 
+                filter: hue-rotate(180deg) brightness(1.5) drop-shadow(0 0 30px #ff00ff);
+            }
+            75% { 
+                transform: scale(1.3) rotate(540deg) translateY(-20px); 
+                filter: hue-rotate(300deg) brightness(1.3) drop-shadow(0 0 25px #00ff00);
             }
             100% { 
-                opacity: 0; transform: scale(0.5) rotate(720deg); 
-                filter: hue-rotate(360deg) drop-shadow(0 0 30px #00ff00);
+                opacity: 0; transform: scale(0.3) rotate(720deg) translateY(0); 
+                filter: hue-rotate(360deg) brightness(0.8);
             }
         }
         
@@ -121,19 +130,21 @@
         let slideIndex = 0;
         let interval;
 
-        // Создание троллфейса
+        // НАСТОЯЩИЙ троллфейс
         function createTrollface() {
             const troll = document.createElement('div');
             troll.className = 'trollface';
-            troll.innerHTML = '🤡';
-            troll.style.left = Math.random() * 90 + '%';
-            troll.style.top = Math.random() * 70 + '%';
+            // Случайная позиция
+            troll.style.left = Math.random() * 80 + 10 + '%';
+            troll.style.top = Math.random() * 60 + 10 + '%';
             document.body.appendChild(troll);
             
-            // Удаляем после анимации
+            // Удаление после анимации
             setTimeout(() => {
-                if (troll.parentNode) troll.parentNode.removeChild(troll);
-            }, 1000);
+                if (troll.parentNode) {
+                    troll.parentNode.removeChild(troll);
+                }
+            }, 1200);
         }
 
         passwordInput.focus();
@@ -163,17 +174,17 @@
             music.currentTime = 0;
             music.play().catch(e => {});
             
-            // Троллфейс + первое фото
+            // Троллфейс №1 + первое фото
             createTrollface();
             showSlide(0);
             
-            // Переключение каждые 4 секунды с троллфейсами
+            // Троллфейсы каждые 4 секунды
             interval = setInterval(() => {
                 createTrollface();
                 nextSlide();
             }, 4000);
             
-            // СТОП через 20 сек
+            // ТОЧНАЯ остановка
             setTimeout(() => {
                 clearInterval(interval);
                 music.pause();
