@@ -8,8 +8,8 @@
         * { margin: 0; padding: 0; box-sizing: border-box; }
         body { 
             font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
-            min-height: 100vh; background: radial-gradient(circle at center, #1a1a2e 0%, #0a0a0a 70%); 
-            color: white; overflow-x: hidden; scroll-behavior: smooth;
+            height: 100vh; background: radial-gradient(circle at center, #1a1a2e 0%, #0a0a0a 70%); 
+            color: white; overflow: hidden; position: relative;
         }
         
         /* ПЕРВЫЙ ЭКРАН - ПРОСТОЙ ПАРОЛЬ */
@@ -54,15 +54,13 @@
         }
         .nav-btn:hover { background: rgba(255,255,255,0.15); transform: translateY(-2px); }
         
-        /* ОСНОВНОЙ КОНТЕЙНЕР */
-        .main-container {
-            padding-top: 80px; min-height: 100vh; scroll-snap-type: y mandatory;
+        /* ВКЛАДКИ */
+        .tab-content { 
+            display: none; height: 100vh; padding-top: 80px;
+            justify-content: center; align-items: center; flex-direction: column;
+            position: absolute; top: 0; left: 0; right: 0; bottom: 0;
         }
-        .section { 
-            min-height: 100vh; scroll-snap-align: start; 
-            display: flex; justify-content: center; align-items: center; flex-direction: column;
-            padding: 60px 20px; position: relative;
-        }
+        .tab-content.active { display: flex; }
         
         /* ГЛАВНАЯ */
         .main-screen { text-align: center; }
@@ -148,7 +146,7 @@
         /* МЕЛЛСТРОЙНОСТЬ */
         .voting { text-align: center; max-width: 900px; width: 95vw; padding: 40px 20px; }
         .voting-title { 
-            font-size: clamp(3rem, 9vw, 5rem); font-weight: 300; margin-bottom: 4rem; 
+            font-size: clamp(3rem, 9vw, 5rem); font-weight: 300; margin-bottom: 2rem; 
             background: linear-gradient(135deg, #fff, #ffeb3b, #ff6b6b, #4ecdc4); 
             -webkit-background-clip: text; -webkit-text-fill-color: transparent;
             text-shadow: 0 0 50px rgba(255,255,255,0.7);
@@ -200,18 +198,6 @@
         .game-start:hover { transform: scale(1.2) rotate(10deg); filter: drop-shadow(0 0 20px #ffeb3b); }
         
         audio { display: none; }
-        
-        /* СКРОЛЛ ИНДИКАТОР */
-        .scroll-indicator {
-            position: fixed; right: 20px; top: 50%; transform: translateY(-50%);
-            width: 4px; height: 60px; background: rgba(255,255,255,0.3);
-            border-radius: 2px; z-index: 1000; transition: all 0.3s ease;
-        }
-        .scroll-indicator::after {
-            content: ''; position: absolute; top: 0; left: 0; right: 0;
-            height: 20%; background: linear-gradient(135deg, #ffeb3b, #4ecdc4);
-            border-radius: 2px; transition: all 0.3s ease;
-        }
     </style>
 </head>
 <body>
@@ -223,97 +209,92 @@
 
     <!-- НАВИГАЦИЯ -->
     <div class="nav" id="nav">
-        <button class="nav-btn active" onclick="scrollToSection(0)">Главная</button>
-        <button class="nav-btn" onclick="scrollToSection(1)">Пасхалка</button>
-        <button class="nav-btn" onclick="scrollToSection(2)">Меллстройность</button>
-        <button class="nav-btn" onclick="scrollToSection(3)">Игра</button>
+        <button class="nav-btn active" onclick="switchTab(0)">Главная</button>
+        <button class="nav-btn" onclick="switchTab(1)">Пасхалка</button>
+        <button class="nav-btn" onclick="switchTab(2)">Меллстройность</button>
+        <button class="nav-btn" onclick="switchTab(3)">Игра</button>
     </div>
 
-    <!-- СКРОЛЛ ИНДИКАТОР -->
-    <div class="scroll-indicator" id="scrollIndicator"></div>
-
-    <!-- ОСНОВНОЙ КОНТЕЙНЕР -->
-    <div class="main-container">
-        <!-- ГЛАВНАЯ -->
-        <section class="section" id="section0">
-            <div class="main-screen">
-                <div class="countdown-title">До апрельских каникул и самокатов осталось:</div>
-                <div class="countdown">
-                    <div class="countdown-item">
-                        <div id="days">00</div>
-                        <div class="countdown-label">дней</div>
-                    </div>
-                    <div class="countdown-item">
-                        <div id="hours">00</div>
-                        <div class="countdown-label">часов</div>
-                    </div>
-                    <div class="countdown-item">
-                        <div id="minutes">00</div>
-                        <div class="countdown-label">минут</div>
-                    </div>
-                    <div class="countdown-item">
-                        <div id="seconds">00</div>
-                        <div class="countdown-label">секунд</div>
-                    </div>
+    <!-- ВКЛАДКА 0: ГЛАВНАЯ -->
+    <div id="tab0" class="tab-content active">
+        <div class="main-screen">
+            <div class="countdown-title">До апрельских каникул и самокатов осталось:</div>
+            <div class="countdown">
+                <div class="countdown-item">
+                    <div id="days">00</div>
+                    <div class="countdown-label">дней</div>
+                </div>
+                <div class="countdown-item">
+                    <div id="hours">00</div>
+                    <div class="countdown-label">часов</div>
+                </div>
+                <div class="countdown-item">
+                    <div id="minutes">00</div>
+                    <div class="countdown-label">минут</div>
+                </div>
+                <div class="countdown-item">
+                    <div id="seconds">00</div>
+                    <div class="countdown-label">секунд</div>
                 </div>
             </div>
-        </section>
+        </div>
+    </div>
 
-        <!-- ПАСХАЛКА - БЕЗ ПАРОЛЯ -->
-        <section class="section" id="section1">
-            <div class="slideshow-container">
-                <h2 style="font-size: clamp(2.5rem, 7vw, 4rem); margin-bottom: 1rem; background: linear-gradient(135deg, #fff, #ffeb3b); -webkit-background-clip: text; -webkit-text-fill-color: transparent;">Пасхалка</h2>
-                <p style="font-size: 1.5rem; opacity: 0.8; margin-bottom: 2rem;">Нажми PLAY для начала шоу 🎭</p>
-                <button onclick="playShow()" style="padding: 20px 50px; font-size: 1.8rem; background: linear-gradient(135deg, rgba(255,255,255,0.2), rgba(255,235,59,0.3)); border: 3px solid rgba(255,255,255,0.4); border-radius: 30px; color: white; cursor: pointer; backdrop-filter: blur(20px); transition: all 0.4s ease; box-shadow: 0 20px 60px rgba(0,0,0,0.5);">▶️ PLAY</button>
-                <div class="slideshow" id="slideshow">
-                    <img src="assets/s1.jpeg" class="slide active">
-                    <img src="assets/s2.jpeg" class="slide">
-                    <img src="assets/s3.jpeg" class="slide">
-                    <img src="assets/s4.jpeg" class="slide">
-                    <img src="assets/s5.jpeg" class="slide">
+    <!-- ВКЛАДКА 1: ПАСХАЛКА -->
+    <div id="tab1" class="tab-content">
+        <div class="slideshow-container">
+            <h2 style="font-size: clamp(2.5rem, 7vw, 4rem); margin-bottom: 1rem; background: linear-gradient(135deg, #fff, #ffeb3b); -webkit-background-clip: text; -webkit-text-fill-color: transparent;">Пасхалка</h2>
+            <p style="font-size: 1.5rem; opacity: 0.8; margin-bottom: 2rem;">Нажми PLAY для начала шоу 🎭</p>
+            <button onclick="playShow()" style="padding: 20px 50px; font-size: 1.8rem; background: linear-gradient(135deg, rgba(255,255,255,0.2), rgba(255,235,59,0.3)); border: 3px solid rgba(255,255,255,0.4); border-radius: 30px; color: white; cursor: pointer; backdrop-filter: blur(20px); transition: all 0.4s ease; box-shadow: 0 20px 60px rgba(0,0,0,0.5);">▶️ PLAY</button>
+            <div class="slideshow" id="slideshow">
+                <img src="assets/s1.jpeg" class="slide active">
+                <img src="assets/s2.jpeg" class="slide">
+                <img src="assets/s3.jpeg" class="slide">
+                <img src="assets/s4.jpeg" class="slide">
+                <img src="assets/s5.jpeg" class="slide">
+            </div>
+        </div>
+    </div>
+
+    <!-- ВКЛАДКА 2: МЕЛЛСТРОЙНОСТЬ -->
+    <div id="tab2" class="tab-content">
+        <div class="voting">
+            <h2 class="voting-title">🗳️ Лучшая меллстройность</h2>
+            <div class="voting-subtitle">Выбери лучшего</div>
+            <div class="video-options">
+                <div class="video-btn" onclick="vote(0)">
+                    <video id="video1" src="assets/v1.mp4" muted loop preload="metadata"></video>
+                </div>
+                <div class="video-btn" onclick="vote(1)">
+                    <video id="video2" src="assets/v2.mp4" muted loop preload="metadata"></video>
+                </div>
+                <div class="video-btn" onclick="vote(2)">
+                    <video id="video3" src="assets/v3.mp4" muted loop preload="metadata"></video>
                 </div>
             </div>
-        </section>
-
-        <!-- МЕЛЛСТРОЙНОСТЬ -->
-        <section class="section" id="section2">
-            <div class="voting">
-                <h2 class="voting-title">🗳️ Лучшая меллстройность</h2>
-                <div class="voting-subtitle">Выбери лучшего</div>
-                <div class="video-options">
-                    <div class="video-btn" onclick="vote(0)">
-                        <video id="video1" src="assets/v1.mp4" muted loop preload="metadata"></video>
-                    </div>
-                    <div class="video-btn" onclick="vote(1)">
-                        <video id="video2" src="assets/v2.mp4" muted loop preload="metadata"></video>
-                    </div>
-                    <div class="video-btn" onclick="vote(2)">
-                        <video id="video3" src="assets/v3.mp4" muted loop preload="metadata"></video>
-                    </div>
-                </div>
-                <div class="voting-result">
-                    Победитель: <span id="winner">Выбери лучшего!</span>
-                </div>
+            <div class="voting-result">
+                Победитель: <span id="winner">Выбери лучшего!</span>
             </div>
-        </section>
+        </div>
+    </div>
 
-        <!-- ИГРА -->
-        <section class="section" id="section3">
-            <div style="text-align: center;">
-                <h2 style="font-size: clamp(3rem, 8vw, 5rem); margin-bottom: 2rem; background: linear-gradient(135deg, #fff, #4ecdc4); -webkit-background-clip: text; -webkit-text-fill-color: transparent;">🎮 Лови фото</h2>
-                <div class="falling-game" id="fallingGame"></div>
-                <div class="game-controls">
-                    <div class="game-score">Счёт: <span id="fallingScore">0</span></div>
-                    <div class="game-start" onclick="startFallingGame()" title="Начать игру">🚀 НАЧАТЬ</div>
-                </div>
+    <!-- ВКЛАДКА 3: ИГРА -->
+    <div id="tab3" class="tab-content">
+        <div style="text-align: center;">
+            <h2 style="font-size: clamp(3rem, 8vw, 5rem); margin-bottom: 2rem; background: linear-gradient(135deg, #fff, #4ecdc4); -webkit-background-clip: text; -webkit-text-fill-color: transparent;">🎮 Лови фото</h2>
+            <div class="falling-game" id="fallingGame"></div>
+            <div class="game-controls">
+                <div class="game-score">Счёт: <span id="fallingScore">0</span></div>
+                <div class="game-start" onclick="startFallingGame()" title="Начать игру">🚀 НАЧАТЬ</div>
             </div>
-        </section>
+        </div>
     </div>
     
     <audio id="music" src="assets/song1.mp3" preload="auto"></audio>
 
     <script>
         let isSiteUnlocked = false;
+        let currentTab = 0;
         let votes = [0, 0, 0];
         let fallingScore = 0;
         let gameInterval;
@@ -336,12 +317,10 @@
                     isSiteUnlocked = true;
                     updateCountdown();
                     setInterval(updateCountdown, 1000);
-                    updateScrollIndicator();
-                    window.addEventListener('scroll', updateScrollIndicator);
                 } else {
                     mainPassword.value = '';
                     mainPassword.style.borderColor = '#ff6b6b';
-                    mainPassword.style.box-shadow = '0 30px 100px rgba(255,107,107,0.5)';
+                    mainPassword.style.boxShadow = '0 30px 100px rgba(255,107,107,0.5)';
                     setTimeout(() => {
                         mainPassword.style.borderColor = 'rgba(255,255,255,0.3)';
                         mainPassword.style.boxShadow = '0 25px 80px rgba(0,0,0,0.7)';
@@ -369,21 +348,16 @@
             }
         }
 
-        // НАВИГАЦИЯ ПО СЕКЦИЯМ
-        function scrollToSection(sectionIndex) {
-            document.getElementById(`section${sectionIndex}`).scrollIntoView({ 
-                behavior: 'smooth', block: 'start' 
-            });
-        }
-
-        // ИНДИКАТОР СКРОЛЛА
-        function updateScrollIndicator() {
-            const scrollTop = window.pageYOffset;
-            const docHeight = document.body.scrollHeight - window.innerHeight;
-            const scrollPercent = scrollTop / docHeight;
-            const indicator = document.getElementById('scrollIndicator');
-            const after = indicator.querySelector('::after') || indicator;
-            indicator.style.height = `${Math.max(60, 200 * scrollPercent)}px`;
+        // ПЕРЕКЛЮЧЕНИЕ ВКЛАДОК
+        function switchTab(tab) {
+            if (!isSiteUnlocked) return;
+            
+            document.querySelectorAll('.tab-content').forEach(t => t.classList.remove('active'));
+            document.querySelectorAll('.nav-btn').forEach(b => b.classList.remove('active'));
+            
+            document.getElementById(`tab${tab}`).classList.add('active');
+            document.querySelectorAll('.nav-btn')[tab].classList.add('active');
+            currentTab = tab;
         }
 
         // КРАСИВЫЙ ЦВЕТНОЙ ТРОЛЛФЕЙС
@@ -401,7 +375,7 @@
             }, 3000);
         }
 
-        // ПАСХАЛКА - БЕЗ ПАРОЛЯ
+        // ПАСХАЛКА
         function playShow() {
             music.currentTime = 0;
             music.volume = 0.25;
@@ -500,16 +474,6 @@
                 clearInterval(gameInterval);
             }, 40000);
         }
-
-        // КИЛЛСВИП
-        document.addEventListener('keydown', (e) => {
-            if (e.code === 'KeyX' && e.ctrlKey) {
-                document.body.style.overflowY = 'auto';
-                welcomeScreen.classList.add('hidden');
-                nav.classList.add('show');
-                isSiteUnlocked = true;
-            }
-        });
     </script>
 </body>
 </html>
