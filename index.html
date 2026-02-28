@@ -9,8 +9,60 @@
         body { 
             font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
             height: 100vh; background: radial-gradient(circle at center, #1a1a2e 0%, #0a0a0a 70%); 
-            color: white; overflow: hidden;
+            color: white; overflow: hidden; position: relative;
         }
+        
+        /* ПЕРВЫЙ ЭКРАН - ПАРОЛЬ */
+        .welcome-screen { 
+            position: fixed; top: 0; left: 0; right: 0; bottom: 0; 
+            display: flex; flex-direction: column; justify-content: center; align-items: center; 
+            z-index: 3000; background: rgba(0,0,0,0.95); backdrop-filter: blur(30px);
+        }
+        .welcome-screen.hidden { display: none; }
+        .welcome-title { 
+            font-size: clamp(4rem, 25vw, 80vh); font-weight: 200; 
+            letter-spacing: -4px; margin-bottom: 4rem; 
+            background: linear-gradient(135deg, #fff, #ffeb3b, #fff); 
+            -webkit-background-clip: text; -webkit-text-fill-color: transparent;
+            text-shadow: 0 0 60px rgba(255,255,255,0.6);
+            animation: glow 2s ease-in-out infinite alternate;
+        }
+        @keyframes glow { from { filter: drop-shadow(0 0 20px #fff); } to { filter: drop-shadow(0 0 40px #ffeb3b); } }
+        .welcome-input { 
+            width: 90vw; max-width: 500px; padding: 30px; 
+            background: rgba(255,255,255,0.1); border: 4px solid rgba(255,255,255,0.3); 
+            border-radius: 25px; color: white; font-size: 2rem; text-align: center; 
+            backdrop-filter: blur(30px); transition: all 0.5s; 
+            box-shadow: 0 25px 80px rgba(0,0,0,0.7);
+        }
+        .welcome-input::placeholder { color: rgba(255,255,255,0.6); }
+        .welcome-input:focus { 
+            outline: none; border-color: #ffeb3b; 
+            box-shadow: 0 30px 100px rgba(255,235,59,0.4); transform: translateY(-10px) scale(1.02);
+        }
+        
+        /* ГЛАВНАЯ С СЧЕТЧИКОМ */
+        .main-screen { 
+            display: none; height: 100vh; justify-content: center; align-items: center; 
+            text-align: center; flex-direction: column; padding-top: 100px;
+        }
+        .main-screen.active { display: flex; }
+        .countdown-title { 
+            font-size: clamp(2.5rem, 10vw, 5rem); font-weight: 300; 
+            margin-bottom: 3rem; background: linear-gradient(135deg, #fff, #ffeb3b); 
+            -webkit-background-clip: text; -webkit-text-fill-color: transparent;
+            text-shadow: 0 0 30px rgba(255,255,255,0.4);
+        }
+        .countdown { 
+            display: flex; gap: 2rem; flex-wrap: wrap; justify-content: center; 
+            font-size: clamp(3rem, 12vw, 8rem); font-weight: 200; font-family: 'Courier New', monospace;
+        }
+        .countdown-item { 
+            background: rgba(255,255,255,0.1); padding: 20px 30px; 
+            border-radius: 20px; backdrop-filter: blur(20px); 
+            box-shadow: 0 20px 60px rgba(0,0,0,0.5); min-width: 120px;
+        }
+        .countdown-label { font-size: 1rem; opacity: 0.8; margin-top: 5px; }
         
         /* НАВИГАЦИЯ */
         .nav { 
@@ -29,29 +81,11 @@
         }
         .nav-btn:hover { background: rgba(255,255,255,0.1); }
         
-        /* КОНТЕНТ ВКЛАДКИ */
+        /* ВКЛАДКИ */
         .tab-content { 
-            display: none; height: 100vh; padding-top: 80px; 
-            justify-content: center; align-items: center; 
+            display: none; height: 100vh; padding-top: 120px; 
         }
-        .tab-content.active { display: flex; flex-direction: column; }
-        
-        /* ТРОЛЛФЕЙС */
-        .trollface {
-            position: fixed; width: 180px; height: 180px; opacity: 0;
-            pointer-events: none; z-index: 1000; left: 50%; top: 50%;
-            background-size: contain; background-repeat: no-repeat; background-position: center;
-            animation: evilTroll 2s ease-out forwards;
-            transform: translate(-50%, -50%);
-        }
-        @keyframes evilTroll {
-            0% { opacity: 0; transform: translate(-50%, -50%) scale(0.2) rotate(0deg); filter: brightness(0.3) contrast(1.5); }
-            15% { opacity: 1; transform: translate(-50%, -50%) scale(1.4) rotate(-90deg); filter: brightness(1.2) contrast(1.8) drop-shadow(0 0 20px #ff0000); }
-            35% { transform: translate(-50%, -50%) scale(1.8) rotate(180deg); filter: brightness(1.5) contrast(2) drop-shadow(0 0 40px #ff4444) hue-rotate(20deg); }
-            55% { transform: translate(-50%, -50%) scale(2.1) rotate(360deg); filter: brightness(1.8) contrast(2.2) drop-shadow(0 0 60px #ff8800) hue-rotate(60deg); }
-            75% { transform: translate(-50%, -50%) scale(1.7) rotate(540deg); filter: brightness(1.6) contrast(2) drop-shadow(0 0 50px #ffff00) hue-rotate(120deg); }
-            100% { opacity: 0; transform: translate(-50%, -50%) scale(0.4) rotate(900deg); filter: brightness(0.5) contrast(1.5); }
-        }
+        .tab-content.active { display: flex; justify-content: center; align-items: center; flex-direction: column; }
         
         /* ПАСХАЛКА */
         .password-screen { text-align: center; max-width: 500px; width: 90vw; }
@@ -67,11 +101,6 @@
             font-size: 1.8rem; text-align: center; backdrop-filter: blur(25px); 
             transition: all 0.4s; box-shadow: 0 15px 50px rgba(0,0,0,0.5);
         }
-        .password-screen input::placeholder { color: rgba(255,255,255,0.5); }
-        .password-screen input:focus { 
-            outline: none; border-color: rgba(255,255,255,0.8); 
-            box-shadow: 0 20px 60px rgba(255,255,255,0.3); transform: translateY(-5px);
-        }
         .password-screen.hidden { display: none; }
         
         .slideshow { 
@@ -82,56 +111,77 @@
         }
         .slideshow.show { display: block; animation: slideIn 1s ease-out; }
         @keyframes slideIn { from { opacity: 0; transform: translate(-50%, -70%) scale(0.8); } to { opacity: 1; transform: translate(-50%, -50%) scale(1); } }
-        
-        .slide { position: absolute; width: 100%; height: 100%; object-fit: cover; opacity: 0; 
-                 transition: all 1.2s ease-in-out; border-radius: 25px; }
-        .slide.active { opacity: 1; transform: scale(1); filter: brightness(1.1) contrast(1.15); 
-                       box-shadow: inset 0 0 60px rgba(255,255,255,0.15); }
+        .slide { position: absolute; width: 100%; height: 100%; object-fit: cover; opacity: 0; transition: all 1.2s ease-in-out; border-radius: 25px; }
+        .slide.active { opacity: 1; transform: scale(1); filter: brightness(1.1) contrast(1.15); box-shadow: inset 0 0 60px rgba(255,255,255,0.15); }
         .slide:not(.active) { transform: scale(0.92); filter: brightness(0.75); }
         
-        /* ГОЛОСОВАНИЕ - МЕЛЛСТРОЙНОСТЬ */
+        /* МЕЛЛСТРОЙНОСТЬ */
         .voting { text-align: center; max-width: 800px; width: 90vw; padding: 20px; }
         .voting h2 { font-size: clamp(2rem, 8vw, 4rem); margin-bottom: 2rem; }
         .video-options { display: flex; gap: 20px; flex-wrap: wrap; justify-content: center; }
-        .video-btn { 
-            width: 280px; height: 160px; background: rgba(255,255,255,0.1); 
-            border: 2px solid rgba(255,255,255,0.3); border-radius: 15px; 
-            cursor: pointer; transition: all 0.3s; position: relative; overflow: hidden;
-            display: flex; align-items: center; justify-content: center;
-        }
+        .video-btn { width: 280px; height: 160px; background: rgba(255,255,255,0.1); border: 2px solid rgba(255,255,255,0.3); border-radius: 15px; cursor: pointer; transition: all 0.3s; position: relative; overflow: hidden; display: flex; align-items: center; justify-content: center; }
         .video-btn:hover { transform: translateY(-10px); box-shadow: 0 20px 40px rgba(0,0,0,0.5); }
         .video-btn.winner { background: rgba(0,255,0,0.3); border-color: #00ff00; animation: pulse 1s infinite; }
         @keyframes pulse { 0%, 100% { box-shadow: 0 0 20px #00ff00; } 50% { box-shadow: 0 0 40px #00ff00; } }
         .video-btn video { width: 100%; height: 100%; object-fit: cover; border-radius: 13px; }
         .video-btn span { position: absolute; bottom: 10px; left: 50%; transform: translateX(-50%); font-weight: bold; background: rgba(0,0,0,0.7); padding: 5px 10px; border-radius: 10px; }
         
-        /* ИГРА - ПАДАЮЩИЕ ФОТО */
+        /* ИГРА */
         .falling-game { position: relative; width: 100%; height: 70vh; overflow: hidden; }
-        .falling-photo { 
-            position: absolute; width: 120px; height: 120px; 
-            background-size: cover; border-radius: 15px; 
-            cursor: pointer; transition: all 0.2s; box-shadow: 0 10px 30px rgba(0,0,0,0.5);
-        }
+        .falling-photo { position: absolute; width: 120px; height: 120px; background-size: cover; border-radius: 15px; cursor: pointer; transition: all 0.2s; box-shadow: 0 10px 30px rgba(0,0,0,0.5); animation: fall 5s linear infinite; }
         .falling-photo:hover { transform: scale(1.15); filter: brightness(1.4); }
+        @keyframes fall { from { transform: translateY(-100px); } to { transform: translateY(100vh); } }
+        
+        /* ТРОЛЛФЕЙС */
+        .trollface { position: fixed; width: 200px; height: 200px; opacity: 0; pointer-events: none; z-index: 1000; background-size: contain; background-repeat: no-repeat; background-position: center; }
+        @keyframes evilTroll { 0% { opacity: 0; transform: scale(0.1) rotate(0); } 50% { transform: scale(2) rotate(720deg); filter: brightness(2) drop-shadow(0 0 60px #ff0000); } 100% { opacity: 0; transform: scale(0.3) rotate(1440deg); } }
         
         audio { display: none; }
     </style>
 </head>
 <body>
-    <!-- НАВИГАЦИЯ -->
-    <div class="nav">
+    <!-- ПЕРВЫЙ ЭКРАН - ГЛАВНЫЙ ПАРОЛЬ -->
+    <div class="welcome-screen" id="welcomeScreen">
+        <h1 class="welcome-title">Саша</h1>
+        <input class="welcome-input" id="mainPassword" type="password" placeholder="главный пароль" maxlength="10" autocomplete="off">
+    </div>
+
+    <!-- ГЛАВНАЯ С СЧЕТЧИКОМ -->
+    <div class="main-screen" id="mainScreen">
+        <div class="countdown-title">До апрельских каникул и самокатов осталось:</div>
+        <div class="countdown">
+            <div class="countdown-item">
+                <div id="days">00</div>
+                <div class="countdown-label">дней</div>
+            </div>
+            <div class="countdown-item">
+                <div id="hours">00</div>
+                <div class="countdown-label">часов</div>
+            </div>
+            <div class="countdown-item">
+                <div id="minutes">00</div>
+                <div class="countdown-label">минут</div>
+            </div>
+            <div class="countdown-item">
+                <div id="seconds">00</div>
+                <div class="countdown-label">секунд</div>
+            </div>
+        </div>
+    </div>
+
+    <!-- НАВИГАЦИЯ (показывается после пароля) -->
+    <div class="nav" id="nav" style="display: none;">
         <button class="nav-btn active" onclick="switchTab(0)">Пасхалка</button>
         <button class="nav-btn" onclick="switchTab(1)">Меллстройность</button>
         <button class="nav-btn" onclick="switchTab(2)">Игра</button>
     </div>
 
     <!-- ВКЛАДКА 1: ПАСХАЛКА -->
-    <div id="tab0" class="tab-content active">
+    <div id="tab0" class="tab-content">
         <div class="password-screen" id="passwordScreen">
             <h1>Секретное слово</h1>
             <input type="password" id="passwordInput" placeholder="введи пароль" maxlength="10" autocomplete="off">
         </div>
-
         <div class="slideshow" id="slideshow">
             <img src="assets/s1.jpeg" class="slide active">
             <img src="assets/s2.jpeg" class="slide">
@@ -170,27 +220,74 @@
         <div class="falling-game" id="fallingGame"></div>
         <div style="text-align: center; margin-top: 1rem;">
             <div style="font-size: 2.5rem; margin-bottom: 1.5rem;">Счёт: <span id="fallingScore">0</span></div>
-            <button onclick="startFallingGame()" style="padding: 20px 40px; font-size: 1.5rem; background: rgba(255,255,255,0.2); border: 3px solid white; color: white; border-radius: 15px; cursor: pointer; transition: all 0.3s;">🎮 Начать игру</button>
+            <div style="font-size: 4rem; cursor: pointer;" onclick="startFallingGame()" title="Начать игру">🎮</div>
         </div>
     </div>
     
     <audio id="music" src="assets/song1.mp3" preload="auto"></audio>
 
     <script>
+        let isUnlocked = false;
         let currentTab = 0;
         let votes = [0, 0, 0];
         let fallingScore = 0;
         let gameInterval;
+        let slideIndex = 0;
+        let interval;
 
-        // ПЕРЕКЛЮЧЕНИЕ ВКЛАДОК
+        // ГЛАВНЫЙ ПАРОЛЬ
+        const mainPassword = document.getElementById('mainPassword');
+        const welcomeScreen = document.getElementById('welcomeScreen');
+        const mainScreen = document.getElementById('mainScreen');
+        const nav = document.getElementById('nav');
+
+        mainPassword.focus();
+        mainPassword.addEventListener('keypress', (e) => {
+            if (e.key === 'Enter') {
+                if (mainPassword.value === 'амина') {
+                    welcomeScreen.classList.add('hidden');
+                    mainScreen.classList.add('active');
+                    nav.style.display = 'flex';
+                    updateCountdown();
+                    setInterval(updateCountdown, 1000);
+                    isUnlocked = true;
+                } else {
+                    mainPassword.value = '';
+                    mainPassword.style.borderColor = '#ff6b6b';
+                    mainPassword.style.boxShadow = '0 30px 100px rgba(255,107,107,0.5)';
+                    setTimeout(() => {
+                        mainPassword.style.borderColor = 'rgba(255,255,255,0.3)';
+                        mainPassword.style.boxShadow = '0 25px 80px rgba(0,0,0,0.7)';
+                    }, 500);
+                }
+            }
+        });
+
+        // СЧЕТЧИК ДО 30 МАРТА
+        function updateCountdown() {
+            const targetDate = new Date('2026-03-30T00:00:00').getTime();
+            const now = new Date().getTime();
+            const distance = targetDate - now;
+
+            const days = Math.floor(distance / (1000 * 60 * 60 * 24));
+            const hours = Math.floor((distance % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
+            const minutes = Math.floor((distance % (1000 * 60 * 60)) / (1000 * 60));
+            const seconds = Math.floor((distance % (1000 * 60)) / 1000);
+
+            document.getElementById('days').textContent = days.toString().padStart(2, '0');
+            document.getElementById('hours').textContent = hours.toString().padStart(2, '0');
+            document.getElementById('minutes').textContent = minutes.toString().padStart(2, '0');
+            document.getElementById('seconds').textContent = seconds.toString().padStart(2, '0');
+        }
+
+        // НАВИГАЦИЯ
         function switchTab(tab) {
+            if (!isUnlocked) return;
             document.querySelectorAll('.tab-content').forEach(t => t.classList.remove('active'));
             document.querySelectorAll('.nav-btn').forEach(b => b.classList.remove('active'));
             document.getElementById(`tab${tab}`).classList.add('active');
             document.querySelectorAll('.nav-btn')[tab].classList.add('active');
             currentTab = tab;
-            
-            if (tab === 2 && gameInterval) clearInterval(gameInterval);
         }
 
         // ПАСХАЛКА
@@ -199,18 +296,18 @@
         const slideshow = document.getElementById('slideshow');
         const slides = document.querySelectorAll('.slide');
         const music = document.getElementById('music');
-        let slideIndex = 0;
-        let interval;
 
         function createEvilTroll() {
             const troll = document.createElement('div');
             troll.className = 'trollface';
             troll.style.backgroundImage = 'url("assets/t.jpeg")';
+            troll.style.left = (Math.random() * 70 + 15) + '%';
+            troll.style.top = (Math.random() * 50 + 15) + '%';
             document.body.appendChild(troll);
             setTimeout(() => troll.remove(), 2000);
+            troll.style.animation = 'evilTroll 2s ease-out forwards';
         }
 
-        passwordInput.focus();
         passwordInput.addEventListener('keypress', (e) => {
             if (e.key === 'Enter') {
                 if (passwordInput.value === 'амина') {
@@ -222,10 +319,8 @@
                 } else {
                     passwordInput.value = '';
                     passwordInput.style.borderColor = '#ff6b6b';
-                    passwordInput.style.boxShadow = '0 20px 60px rgba(255,107,107,0.5)';
                     setTimeout(() => {
                         passwordInput.style.borderColor = 'rgba(255,255,255,0.2)';
-                        passwordInput.style.boxShadow = '0 15px 50px rgba(0,0,0,0.5)';
                     }, 400);
                 }
             }
@@ -264,20 +359,13 @@
 
         function vote(video) {
             votes[video]++;
-            updateVotes();
-        }
-
-        function updateVotes() {
             const maxVotes = Math.max(...votes);
             const winnerIndex = votes.indexOf(maxVotes);
             document.getElementById('winner').textContent = `v${winnerIndex + 1} (${maxVotes} голосов)`;
-            
-            document.querySelectorAll('.video-btn').forEach((btn, i) => {
-                btn.classList.toggle('winner', i === winnerIndex);
-            });
+            document.querySelectorAll('.video-btn').forEach((btn, i) => btn.classList.toggle('winner', i === winnerIndex));
         }
 
-        // ИГРА
+        // ИГРА (автозапуск по клику на джойстик)
         function startFallingGame() {
             const game = document.getElementById('fallingGame');
             game.innerHTML = '';
@@ -290,13 +378,10 @@
                 const photo = document.createElement('div');
                 photo.className = 'falling-photo';
                 photo.style.left = Math.random() * 85 + '%';
-                photo.style.top = '0%';
                 photo.style.backgroundImage = `url("assets/s${Math.floor(Math.random() * 5) + 1}.jpeg")`;
-                photo.style.animation = `fall ${Math.random() * 3 + 4}s linear forwards`;
                 game.appendChild(photo);
                 
                 photo.onclick = () => {
-                    photo.style.animationPlayState = 'paused';
                     photo.remove();
                     fallingScore++;
                     document.getElementById('fallingScore').textContent = fallingScore;
@@ -304,7 +389,7 @@
                 
                 setTimeout(() => {
                     if (photo.parentNode) photo.remove();
-                }, 8000);
+                }, 7000);
             }, 1200);
             
             setTimeout(() => {
@@ -312,5 +397,5 @@
             }, 35000);
         }
     </script>
-</head>
-<body>
+</body>
+</html>
