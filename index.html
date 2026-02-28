@@ -13,39 +13,38 @@
             overflow: hidden; position: relative;
         }
         
-        /* ОРИГИНАЛЬНЫЙ ТРОЛЛФЕЙС из Википедии */
+        /* ТВОЙ ЧЁРНЫЙ ТРОЛЛФЕЙС t.jpeg */
         .trollface {
-            position: fixed; width: 160px; height: 160px; opacity: 0;
+            position: fixed; width: 180px; height: 180px; opacity: 0;
             pointer-events: none; z-index: 1000;
-            background-image: url("https://upload.wikimedia.org/wikipedia/ru/7/78/Trollface.svg");
             background-size: contain; background-repeat: no-repeat; background-position: center;
-            animation: trollEpic 1.8s ease-out forwards;
+            animation: evilTroll 2s ease-out forwards;
         }
         
-        @keyframes trollEpic {
+        @keyframes evilTroll {
             0% { 
-                opacity: 0; transform: scale(0) rotate(0deg) translateY(0); 
-                filter: brightness(0.5) saturate(0);
+                opacity: 0; transform: scale(0.2) rotate(0deg); 
+                filter: brightness(0.3) contrast(1.5);
             }
-            20% { 
-                opacity: 1; transform: scale(1.5) rotate(90deg) translateY(-30px); 
-                filter: brightness(1.3) saturate(1.2) drop-shadow(0 0 25px #ffeb3b);
+            15% { 
+                opacity: 1; transform: scale(1.4) rotate(-90deg) translateY(-20px); 
+                filter: brightness(1.2) contrast(1.8) drop-shadow(0 0 20px #ff0000);
             }
-            40% { 
-                transform: scale(1.8) rotate(360deg) translateY(-50px); 
-                filter: brightness(1.5) saturate(1.5) drop-shadow(0 0 40px #ff5722) hue-rotate(60deg);
+            35% { 
+                transform: scale(1.8) rotate(180deg) translateY(-40px); 
+                filter: brightness(1.5) contrast(2) drop-shadow(0 0 40px #ff4444) hue-rotate(20deg);
             }
-            60% { 
-                transform: scale(2) rotate(540deg); 
-                filter: brightness(1.7) saturate(1.8) drop-shadow(0 0 50px #9c27b0) hue-rotate(180deg);
+            55% { 
+                transform: scale(2.1) rotate(360deg); 
+                filter: brightness(1.8) contrast(2.2) drop-shadow(0 0 60px #ff8800) hue-rotate(60deg);
             }
-            80% { 
-                transform: scale(1.6) rotate(720deg) translateY(-30px); 
-                filter: brightness(1.4) saturate(1.4) drop-shadow(0 0 35px #00e676) hue-rotate(300deg);
+            75% { 
+                transform: scale(1.7) rotate(540deg) translateY(-30px); 
+                filter: brightness(1.6) contrast(2) drop-shadow(0 0 50px #ffff00) hue-rotate(120deg);
             }
             100% { 
-                opacity: 0; transform: scale(0.4) rotate(1080deg) translateY(30px); 
-                filter: brightness(0.3) saturate(0.5) hue-rotate(360deg);
+                opacity: 0; transform: scale(0.4) rotate(900deg) translateY(20px); 
+                filter: brightness(0.5) contrast(1.5);
             }
         }
         
@@ -76,15 +75,11 @@
             backdrop-filter: blur(10px); border: 1px solid rgba(255,255,255,0.1);
         }
         .slideshow.show { display: block; animation: slideIn 0.8s ease-out; }
-        @keyframes slideIn { 
-            from { opacity: 0; transform: translate(-50%, -60%) scale(0.9); } 
-            to { opacity: 1; transform: translate(-50%, -50%) scale(1); } 
-        }
+        @keyframes slideIn { from { opacity: 0; transform: translate(-50%, -60%) scale(0.9); } to { opacity: 1; transform: translate(-50%, -50%) scale(1); } }
         
-        .slide { position: absolute; width: 100%; height: 100%; object-fit: cover; 
-                 opacity: 0; transition: all 1s ease-in-out; border-radius: 25px; }
-        .slide.active { opacity: 1; transform: scale(1); 
-                       filter: brightness(1.05) contrast(1.1);
+        .slide { position: absolute; width: 100%; height: 100%; object-fit: cover; opacity: 0; 
+                 transition: all 1s ease-in-out; border-radius: 25px; }
+        .slide.active { opacity: 1; transform: scale(1); filter: brightness(1.05) contrast(1.1); 
                        box-shadow: inset 0 0 50px rgba(255,255,255,0.1); }
         .slide:not(.active) { transform: scale(0.95); filter: brightness(0.8); }
         
@@ -116,16 +111,14 @@
         let slideIndex = 0;
         let interval;
 
-        function createTrollface() {
+        function createEvilTroll() {
             const troll = document.createElement('div');
             troll.className = 'trollface';
-            troll.style.left = (Math.random() * 70 + 15) + '%';
-            troll.style.top = (Math.random() * 50 + 15) + '%';
+            troll.style.backgroundImage = 'url("assets/t.jpeg")';  // ← ТВОЙ t.jpeg!
+            troll.style.left = (Math.random() * 65 + 17) + '%';
+            troll.style.top = (Math.random() * 45 + 20) + '%';
             document.body.appendChild(troll);
-            
-            setTimeout(() => {
-                if (troll.parentNode) troll.parentNode.removeChild(troll);
-            }, 1800);
+            setTimeout(() => troll.remove(), 2000);
         }
 
         passwordInput.focus();
@@ -153,15 +146,12 @@
         function playShow() {
             music.currentTime = 0;
             music.play().catch(() => {});
-            
-            createTrollface();
+            createEvilTroll();
             showSlide(0);
-            
             interval = setInterval(() => {
-                createTrollface();
+                createEvilTroll();
                 nextSlide();
             }, 4000);
-            
             setTimeout(() => {
                 clearInterval(interval);
                 music.pause();
