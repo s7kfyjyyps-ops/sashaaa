@@ -80,14 +80,8 @@
         }
         .countdown-label { font-size: 1rem; opacity: 0.8; margin-top: 5px; }
         
-        /* ПАСХАЛКА */
+        /* ПАСХАЛКА - УБРАЛИ "СЕКРЕТНОЕ СЛОВО" */
         .password-screen { text-align: center; max-width: 500px; width: 90vw; }
-        .password-screen h1 { 
-            font-size: clamp(4rem, 20vw, 70vh); font-weight: 200; 
-            letter-spacing: -3px; margin-bottom: 3rem; 
-            background: linear-gradient(135deg, #fff, #ccc); -webkit-background-clip: text; -webkit-text-fill-color: transparent;
-            text-shadow: 0 0 50px rgba(255,255,255,0.5);
-        }
         .password-screen input { 
             width: 100%; padding: 25px; background: rgba(255,255,255,0.08); 
             border: 3px solid rgba(255,255,255,0.2); border-radius: 20px; color: white; 
@@ -108,9 +102,41 @@
         .slide.active { opacity: 1; transform: scale(1); filter: brightness(1.1) contrast(1.15); box-shadow: inset 0 0 60px rgba(255,255,255,0.15); }
         .slide:not(.active) { transform: scale(0.92); filter: brightness(0.75); }
         
-        /* МЕЛЛСТРОЙНОСТЬ */
-        .voting { text-align: center; max-width: 800px; width: 90vw; padding: 20px; }
-        .voting h2 { font-size: clamp(2rem, 8vw, 4rem); margin-bottom: 2rem; }
+        /* ЦВЕТНЫЕ ТРОЛЛФЕЙСЫ */
+        .trollface { 
+            position: fixed; width: 180px; height: 180px; opacity: 0; 
+            pointer-events: none; z-index: 4000; background-size: contain; 
+            background-repeat: no-repeat; background-position: center;
+        }
+        .troll-blue { filter: hue-rotate(200deg) brightness(1.3) saturate(2); }
+        .troll-pink { filter: hue-rotate(320deg) brightness(1.4) saturate(2.5); }
+        .troll-green { filter: hue-rotate(120deg) brightness(1.2) saturate(2); }
+        .troll-orange { filter: hue-rotate(30deg) brightness(1.5) saturate(2); }
+        .troll-purple { filter: hue-rotate(270deg) brightness(1.3) saturate(2.2); }
+        
+        @keyframes coloredTroll { 
+            0% { opacity: 0; transform: scale(0.1) rotate(0deg); } 
+            20% { opacity: 1; transform: scale(1.2) rotate(180deg); } 
+            50% { transform: scale(2.5) rotate(720deg); } 
+            100% { opacity: 0; transform: scale(0.4) rotate(1440deg); } 
+        }
+        
+        /* МЕЛЛСТРОЙНОСТЬ - УЛУЧШЕННЫЙ ТЕКСТ */
+        .voting { text-align: center; max-width: 800px; width: 90vw; padding: 40px 20px; }
+        .voting-title { 
+            font-size: clamp(2.5rem, 8vw, 4.5rem); 
+            font-weight: 300; margin-bottom: 3rem; 
+            background: linear-gradient(135deg, #fff, #ffeb3b, #ff6b6b); 
+            -webkit-background-clip: text; -webkit-text-fill-color: transparent;
+            text-shadow: 0 0 40px rgba(255,255,255,0.6);
+            padding: 20px;
+        }
+        .voting-result { 
+            font-size: clamp(1.8rem, 5vw, 2.5rem); margin-top: 3rem; 
+            padding: 20px; background: rgba(255,255,255,0.1); 
+            border-radius: 20px; backdrop-filter: blur(20px);
+            text-shadow: 0 0 20px rgba(255,255,255,0.5);
+        }
         .video-options { display: flex; gap: 20px; flex-wrap: wrap; justify-content: center; }
         .video-btn { 
             width: 280px; height: 160px; background: rgba(255,255,255,0.1); 
@@ -135,18 +161,6 @@
         .game-controls { text-align: center; margin-top: 1rem; }
         .game-score { font-size: 2.5rem; margin-bottom: 1.5rem; }
         .game-start { font-size: 4rem; cursor: pointer; }
-        
-        /* ТРОЛЛФЕЙС - ЦВЕТНЫЙ */
-        .trollface { 
-            position: fixed; width: 200px; height: 200px; opacity: 0; 
-            pointer-events: none; z-index: 4000; background-size: contain; 
-            background-repeat: no-repeat; background-position: center;
-        }
-        @keyframes evilTroll { 
-            0% { opacity: 0; transform: scale(0.1) rotate(0); } 
-            50% { transform: scale(2) rotate(720deg); filter: brightness(1.5) saturate(2) drop-shadow(0 0 60px #ff00ff); } 
-            100% { opacity: 0; transform: scale(0.3) rotate(1440deg); } 
-        }
         
         audio { display: none; }
     </style>
@@ -191,10 +205,9 @@
         </div>
     </div>
 
-    <!-- ВКЛАДКА 1: ПАСХАЛКА -->
+    <!-- ВКЛАДКА 1: ПАСХАЛКА - БЕЗ "СЕКРЕТНОГО СЛОВА" -->
     <div id="tab1" class="tab-content">
         <div class="password-screen" id="passwordScreen">
-            <h1>секретное слово</h1>
             <input type="password" id="passwordInput" placeholder="введи пароль" maxlength="10" autocomplete="off">
         </div>
         <div class="slideshow" id="slideshow">
@@ -206,10 +219,10 @@
         </div>
     </div>
 
-    <!-- ВКЛАДКА 2: МЕЛЛСТРОЙНОСТЬ -->
+    <!-- ВКЛАДКА 2: МЕЛЛСТРОЙНОСТЬ - УЛУЧШЕННЫЙ ТЕКСТ -->
     <div id="tab2" class="tab-content">
         <div class="voting">
-            <h2>🗳️ Лучшая меллстройность</h2>
+            <h2 class="voting-title">🗳️ Лучшая меллстройность</h2>
             <div class="video-options">
                 <div class="video-btn" onclick="vote(0)">
                     <video id="video1" src="assets/v1.mp4" muted loop preload="metadata"></video>
@@ -221,7 +234,7 @@
                     <video id="video3" src="assets/v3.mp4" muted loop preload="metadata"></video>
                 </div>
             </div>
-            <div style="margin-top: 2rem; font-size: 1.8rem;">
+            <div class="voting-result">
                 Победитель: <span id="winner">Голосуй!</span>
             </div>
         </div>
@@ -246,6 +259,7 @@
         let gameInterval;
         let slideIndex = 0;
         let slideshowInterval;
+        const trollColors = ['troll-blue', 'troll-pink', 'troll-green', 'troll-orange', 'troll-purple'];
 
         // ГЛАВНЫЙ ПАРОЛЬ
         const mainPassword = document.getElementById('mainPassword');
@@ -302,16 +316,16 @@
             currentTab = tab;
         }
 
-        // ТРОЛЛФЕЙС - t.jpeg
-        function createEvilTroll() {
+        // ЦВЕТНОЙ ТРОЛЛФЕЙС ДЛЯ КАЖДОЙ ФОТКИ
+        function createColoredTroll() {
             const troll = document.createElement('div');
-            troll.className = 'trollface';
+            troll.className = `trollface ${trollColors[Math.floor(Math.random() * trollColors.length)]}`;
             troll.style.backgroundImage = 'url("assets/t.jpeg")';
             troll.style.left = (Math.random() * 70 + 15) + '%';
             troll.style.top = (Math.random() * 50 + 15) + '%';
             document.body.appendChild(troll);
-            troll.style.animation = 'evilTroll 2s ease-out forwards';
-            setTimeout(() => troll.remove(), 2000);
+            troll.style.animation = 'coloredTroll 2.5s ease-out forwards';
+            setTimeout(() => troll.remove(), 2500);
         }
 
         // ПАСХАЛКА
@@ -343,10 +357,10 @@
             music.currentTime = 0;
             music.volume = 0.3;
             music.play().catch(() => {});
-            createEvilTroll();
+            createColoredTroll();
             showSlide(0);
             slideshowInterval = setInterval(() => {
-                createEvilTroll(); // Троллфейс ПРИ КАЖДОМ переключении фото
+                createColoredTroll(); // ЦВЕТНОЙ ТРОЛЛ НА КАЖДОЙ ФОТКЕ
                 nextSlide();
             }, 4000);
             setTimeout(() => {
