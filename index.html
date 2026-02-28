@@ -87,8 +87,11 @@
         }
         .tab-content.active { display: flex; justify-content: center; align-items: center; flex-direction: column; }
         
-        /* ПАСХАЛКА */
-        .password-screen { text-align: center; max-width: 500px; width: 90vw; }
+        /* ПАСХАЛКА - УПРОЩЕННАЯ */
+        .password-screen { 
+            text-align: center; max-width: 500px; width: 90vw; 
+            display: flex; flex-direction: column; justify-content: center; align-items: center; height: 100%;
+        }
         .password-screen h1 { 
             font-size: clamp(4rem, 20vw, 70vh); font-weight: 200; 
             letter-spacing: -3px; margin-bottom: 3rem; 
@@ -146,29 +149,6 @@
         <input class="welcome-input" id="mainPassword" type="password" placeholder="главный пароль" maxlength="10" autocomplete="off">
     </div>
 
-    <!-- ГЛАВНАЯ С СЧЕТЧИКОМ -->
-    <div class="main-screen" id="mainScreen">
-        <div class="countdown-title">До апрельских каникул и самокатов осталось:</div>
-        <div class="countdown">
-            <div class="countdown-item">
-                <div id="days">00</div>
-                <div class="countdown-label">дней</div>
-            </div>
-            <div class="countdown-item">
-                <div id="hours">00</div>
-                <div class="countdown-label">часов</div>
-            </div>
-            <div class="countdown-item">
-                <div id="minutes">00</div>
-                <div class="countdown-label">минут</div>
-            </div>
-            <div class="countdown-item">
-                <div id="seconds">00</div>
-                <div class="countdown-label">секунд</div>
-            </div>
-        </div>
-    </div>
-
     <!-- НАВИГАЦИЯ (показывается после пароля) -->
     <div class="nav" id="nav" style="display: none;">
         <button class="nav-btn active" onclick="switchTab(0)">Пасхалка</button>
@@ -176,10 +156,35 @@
         <button class="nav-btn" onclick="switchTab(2)">Игра</button>
     </div>
 
+    <!-- ГЛАВНАЯ С СЧЕТЧИКОМ (теперь как вкладка 3) -->
+    <div id="tab3" class="tab-content active">
+        <div class="main-screen">
+            <div class="countdown-title">До апрельских каникул и самокатов осталось:</div>
+            <div class="countdown">
+                <div class="countdown-item">
+                    <div id="days">00</div>
+                    <div class="countdown-label">дней</div>
+                </div>
+                <div class="countdown-item">
+                    <div id="hours">00</div>
+                    <div class="countdown-label">часов</div>
+                </div>
+                <div class="countdown-item">
+                    <div id="minutes">00</div>
+                    <div class="countdown-label">минут</div>
+                </div>
+                <div class="countdown-item">
+                    <div id="seconds">00</div>
+                    <div class="countdown-label">секунд</div>
+                </div>
+            </div>
+        </div>
+    </div>
+
     <!-- ВКЛАДКА 1: ПАСХАЛКА -->
     <div id="tab0" class="tab-content">
         <div class="password-screen" id="passwordScreen">
-            <h1>Секретное слово</h1>
+            <h1>секретное слово</h1>
             <input type="password" id="passwordInput" placeholder="введи пароль" maxlength="10" autocomplete="off">
         </div>
         <div class="slideshow" id="slideshow">
@@ -206,7 +211,6 @@
                 </div>
                 <div class="video-btn" onclick="vote(2)">
                     <video src="assets/v3.mp4" muted loop></video>
-                    <span>v3</span>
                 </div>
             </div>
             <div style="margin-top: 2rem; font-size: 1.8rem;">
@@ -228,7 +232,7 @@
 
     <script>
         let isUnlocked = false;
-        let currentTab = 0;
+        let currentTab = 3; // Начинаем с главной вкладки (tab3)
         let votes = [0, 0, 0];
         let fallingScore = 0;
         let gameInterval;
@@ -238,7 +242,6 @@
         // ГЛАВНЫЙ ПАРОЛЬ
         const mainPassword = document.getElementById('mainPassword');
         const welcomeScreen = document.getElementById('welcomeScreen');
-        const mainScreen = document.getElementById('mainScreen');
         const nav = document.getElementById('nav');
 
         mainPassword.focus();
@@ -246,11 +249,11 @@
             if (e.key === 'Enter') {
                 if (mainPassword.value === 'амина') {
                     welcomeScreen.classList.add('hidden');
-                    mainScreen.classList.add('active');
                     nav.style.display = 'flex';
+                    isUnlocked = true;
                     updateCountdown();
                     setInterval(updateCountdown, 1000);
-                    isUnlocked = true;
+                    switchTab(3); // Показываем главную вкладку
                 } else {
                     mainPassword.value = '';
                     mainPassword.style.borderColor = '#ff6b6b';
@@ -280,13 +283,20 @@
             document.getElementById('seconds').textContent = seconds.toString().padStart(2, '0');
         }
 
-        // НАВИГАЦИЯ
+        // НАВИГАЦИЯ - ИСПРАВЛЕНА
         function switchTab(tab) {
-            if (!isUnlocked) return;
+            if (!isUnlocked && tab !== 3) return; // Только главная вкладка доступна без пароля
+            
+            // Скрываем все вкладки
             document.querySelectorAll('.tab-content').forEach(t => t.classList.remove('active'));
+            // Убираем active у всех кнопок
             document.querySelectorAll('.nav-btn').forEach(b => b.classList.remove('active'));
+            
+            // Показываем нужную вкладку
             document.getElementById(`tab${tab}`).classList.add('active');
+            // Активируем соответствующую кнопку
             document.querySelectorAll('.nav-btn')[tab].classList.add('active');
+            
             currentTab = tab;
         }
 
@@ -365,7 +375,7 @@
             document.querySelectorAll('.video-btn').forEach((btn, i) => btn.classList.toggle('winner', i === winnerIndex));
         }
 
-        // ИГРА (автозапуск по клику на джойстик)
+        // ИГРА
         function startFallingGame() {
             const game = document.getElementById('fallingGame');
             game.innerHTML = '';
