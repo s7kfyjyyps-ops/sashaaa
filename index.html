@@ -7,7 +7,7 @@
     <style>
         * { margin: 0; padding: 0; box-sizing: border-box; }
         body { 
-            font-family: 'Courier New', 'Consolas', monospace;
+            font-family: Arial, sans-serif;
             height: 100vh; background: radial-gradient(circle at center, #1a1a2e 0%, #0a0a0a 70%); 
             color: white; overflow: hidden; position: relative;
         }
@@ -26,11 +26,11 @@
         .welcome-input { 
             width: 90vw; max-width: 500px; padding: 30px; 
             background: rgba(255,255,255,0.1); border: 4px solid rgba(255,255,255,0.3); 
-            border-radius: 25px; color: white; font-size: 2rem; font-family: 'Courier New', monospace;
+            border-radius: 25px; color: white; font-size: 2rem; font-family: Arial, sans-serif;
             text-align: center; backdrop-filter: blur(30px); transition: all 0.5s; 
             box-shadow: 0 25px 80px rgba(0,0,0,0.7); letter-spacing: 3px;
         }
-        .welcome-input::placeholder { color: rgba(255,255,255,0.6); font-family: 'Courier New', monospace; }
+        .welcome-input::placeholder { color: rgba(255,255,255,0.6); font-family: Arial, sans-serif; }
         .welcome-input:focus { 
             outline: none; border-color: #ffeb3b; 
             box-shadow: 0 30px 100px rgba(255,235,59,0.4); transform: translateY(-10px) scale(1.02);
@@ -39,13 +39,12 @@
         /* НАВИГАЦИЯ */
         .nav { 
             position: fixed; top: 0; left: 0; right: 0; 
-            display: none; background: rgba(0,0,0,0.95); 
+            display: flex; background: rgba(0,0,0,0.95); 
             backdrop-filter: blur(20px); z-index: 2000; padding: 12px 0;
         }
-        .nav.show { display: flex; }
         .nav-btn { 
             flex: 1; padding: 14px 10px; background: none; 
-            border: none; color: white; font-size: 1rem; font-weight: 700; font-family: 'Courier New', monospace;
+            border: none; color: white; font-size: 1rem; font-weight: 700; font-family: Arial, sans-serif;
             cursor: pointer; transition: all 0.4s ease; white-space: nowrap; letter-spacing: 2px; text-transform: uppercase;
         }
         .nav-btn.active { 
@@ -54,25 +53,24 @@
         }
         .nav-btn:hover { background: rgba(255,255,255,0.15); transform: translateY(-2px); }
         
-        /* ВКЛАДКИ */
+        /* ВСЕ ВКЛАДКИ ВИДНЫ */
         .tab-content { 
-            display: none; height: 100vh; padding-top: 80px;
+            display: flex; height: 100vh; padding-top: 80px;
             justify-content: center; align-items: center; flex-direction: column;
             position: absolute; top: 0; left: 0; right: 0; bottom: 0;
         }
-        .tab-content.active { display: flex; }
         
         /* ГЛАВНАЯ */
         .main-screen { text-align: center; }
         .countdown-title { 
             font-size: clamp(2.5rem, 8vw, 5rem); font-weight: 700; 
             margin-bottom: 3rem; color: white; letter-spacing: 3px; text-transform: uppercase;
-            text-shadow: 0 0 30px rgba(255,255,255,0.8);
+            text-shadow: 0 0 30px rgba(255,255,255,0.8); font-family: Arial, sans-serif;
         }
         .countdown { 
             display: flex; gap: 2rem; flex-wrap: wrap; justify-content: center; 
-            font-size: clamp(3rem, 10vw, 8rem); font-weight: 700; font-family: 'Courier New', monospace;
-            letter-spacing: 2px; text-shadow: 0 0 20px rgba(255,255,255,0.6);
+            font-size: clamp(3rem, 10vw, 8rem); font-weight: 700; font-family: Arial, sans-serif;
+            letter-spacing: 2px; text-shadow: 0 0 20px rgba(255,255,255,0.6); color: white;
         }
         .countdown-item { 
             background: rgba(255,255,255,0.1); padding: 25px 35px; 
@@ -82,31 +80,26 @@
             transition: all 0.3s ease;
         }
         .countdown-item:hover { transform: translateY(-10px); border-color: #ffeb3b; }
-        .countdown-label { font-size: 1.1rem; opacity: 0.9; margin-top: 8px; font-weight: 700; letter-spacing: 2px; }
+        .countdown-label { font-size: 1.1rem; opacity: 0.9; margin-top: 8px; font-weight: 700; letter-spacing: 2px; color: white; }
         
-        /* ПАСХАЛКА - АВТОВОСПРОИЗВЕДЕНИЕ */
+        /* ПАСХАЛКА - ТРОЛЛФЕЙСЫ */
         .slideshow { 
             width: 90vw; max-width: 700px; height: 75vh; position: relative; border-radius: 30px; 
             overflow: hidden; box-shadow: 0 40px 120px rgba(0,0,0,0.9);
             backdrop-filter: blur(20px); border: 3px solid rgba(255,255,255,0.2);
             margin: 0 auto;
+            display: grid; grid-template-columns: repeat(3, 1fr); gap: 20px; padding: 20px;
         }
         .slideshow.show { animation: slideIn 1s ease-out; }
         @keyframes slideIn { from { opacity: 0; transform: scale(0.9); } to { opacity: 1; transform: scale(1); } }
-        .slide { position: absolute; width: 100%; height: 100%; object-fit: cover; opacity: 0; 
-                 transition: all 1.5s ease-in-out; border-radius: 27px; }
-        .slide.active { opacity: 1; transform: scale(1); filter: brightness(1.15) contrast(1.2); 
-                       box-shadow: inset 0 0 80px rgba(255,255,255,0.2); }
-        .slide:not(.active) { transform: scale(0.95); filter: brightness(0.8); }
         
-        /* ТРОЛЛФЕЙСЫ */
         .trollface { 
-            position: fixed; width: 160px; height: 160px; opacity: 0; 
-            pointer-events: none; z-index: 4000; background-size: contain; 
-            background-repeat: no-repeat; background-position: center;
-            border-radius: 50%; border: 4px solid rgba(255,255,255,0.3);
-            backdrop-filter: blur(10px);
+            width: 180px; height: 180px; background: center/contain no-repeat url("assets/t.jpeg"); 
+            opacity: 0; pointer-events: none; border-radius: 15px; 
+            border: 4px solid rgba(255,255,255,0.3); backdrop-filter: blur(10px);
+            transition: all 0.5s ease;
         }
+        .trollface.show { opacity: 1; transform: scale(1); }
         .troll-blue { 
             filter: hue-rotate(210deg) brightness(1.4) saturate(2.2) drop-shadow(0 0 30px #00bfff); 
             background-color: rgba(0, 191, 255, 0.2);
@@ -128,31 +121,24 @@
             background-color: rgba(147, 112, 219, 0.25);
         }
         
-        @keyframes smoothTroll { 
-            0% { opacity: 0; transform: scale(0.2) rotate(0deg) translateY(0); } 
-            20% { opacity: 1; transform: scale(1.1) rotate(90deg) translateY(-20px); }
-            50% { transform: scale(2.2) rotate(540deg) translateY(-50px); } 
-            100% { opacity: 0; transform: scale(0.5) rotate(1080deg) translateY(30px); } 
-        }
-        
         /* МЕЛЛСТРОЙНОСТЬ */
         .voting { text-align: center; max-width: 900px; width: 95vw; padding: 60px 20px; }
         .voting-title { 
             font-size: clamp(3rem, 9vw, 5rem); font-weight: 700; margin-bottom: 1.5rem; 
             color: white; letter-spacing: 4px; text-transform: uppercase; text-shadow: 0 0 50px rgba(255,255,255,0.8);
-            font-family: 'Courier New', monospace;
+            font-family: Arial, sans-serif;
         }
         .voting-subtitle {
             font-size: clamp(1.8rem, 4vw, 2.8rem); margin-bottom: 4rem;
             color: #ffeb3b; font-weight: 700; text-shadow: 0 0 30px rgba(255,235,59,0.8);
-            font-family: 'Courier New', monospace; letter-spacing: 3px; text-transform: uppercase;
+            font-family: Arial, sans-serif; letter-spacing: 3px; text-transform: uppercase;
         }
         .voting-result { 
             font-size: clamp(2rem, 5vw, 3rem); margin-top: 4rem; 
             padding: 30px 40px; background: linear-gradient(135deg, rgba(255,255,255,0.15), rgba(255,235,59,0.1)); 
             border-radius: 30px; backdrop-filter: blur(30px); border: 2px solid rgba(255,255,255,0.2);
-            text-shadow: 0 0 25px rgba(255,255,255,0.6); font-family: 'Courier New', monospace;
-            font-weight: 700; letter-spacing: 2px;
+            text-shadow: 0 0 25px rgba(255,255,255,0.6); font-family: Arial, sans-serif;
+            font-weight: 700; letter-spacing: 2px; color: white;
         }
         .video-options { display: flex; gap: 25px; flex-wrap: wrap; justify-content: center; }
         .video-btn { 
@@ -176,7 +162,7 @@
         .video-btn video { width: 100%; height: 100%; object-fit: cover; border-radius: 17px; }
         
         /* ИГРА - ТОЛЬКО ДЖОЙСТИК */
-        .game-controls { text-align: center; }
+        .game-controls { text-align: center; font-family: Arial, sans-serif; color: white; }
         .game-start { 
             font-size: 8rem; cursor: pointer; transition: all 0.3s ease; 
             color: white; font-weight: 700; text-shadow: 0 0 40px rgba(255,255,255,0.8);
@@ -204,7 +190,7 @@
     </div>
 
     <!-- ВКЛАДКА 0: ГЛАВНАЯ -->
-    <div id="tab0" class="tab-content active">
+    <div id="tab0" class="tab-content">
         <div class="main-screen">
             <div class="countdown-title">ДО АПРЕЛЬСКИХ КАНИКУЛ</div>
             <div class="countdown">
@@ -228,14 +214,17 @@
         </div>
     </div>
 
-    <!-- ВКЛАДКА 1: ПАСХАЛКА - АВТОВОСПРОИЗВЕДЕНИЕ -->
+    <!-- ВКЛАДКА 1: ПАСХАЛКА - КВАДРАТНЫЕ ТРОЛЛФЕЙСЫ -->
     <div id="tab1" class="tab-content">
         <div class="slideshow" id="slideshow">
-            <img src="assets/s1.jpeg" class="slide active">
-            <img src="assets/s2.jpeg" class="slide">
-            <img src="assets/s3.jpeg" class="slide">
-            <img src="assets/s4.jpeg" class="slide">
-            <img src="assets/s5.jpeg" class="slide">
+            <div class="trollface troll-blue"></div>
+            <div class="trollface troll-pink"></div>
+            <div class="trollface troll-green"></div>
+            <div class="trollface troll-orange"></div>
+            <div class="trollface troll-purple"></div>
+            <div class="trollface troll-blue"></div>
+            <div class="trollface troll-pink"></div>
+            <div class="trollface troll-green"></div>
         </div>
     </div>
 
@@ -266,7 +255,6 @@
         <div class="game-controls">
             <div class="game-start" onclick="startFallingGame()" title="Начать игру">🎮</div>
         </div>
-        <div class="falling-game" id="fallingGame" style="position: absolute; top: 0; left: 0; right: 0; bottom: 0; pointer-events: none;"></div>
     </div>
     
     <audio id="music" src="assets/song1.mp3" preload="auto"></audio>
@@ -277,8 +265,6 @@
         let votes = [0, 0, 0];
         let fallingScore = 0;
         let gameInterval;
-        let slideIndex = 0;
-        let slideshowInterval;
         const trollColors = ['troll-blue', 'troll-pink', 'troll-green', 'troll-orange', 'troll-purple'];
         const music = document.getElementById('music');
 
@@ -292,10 +278,10 @@
             if (e.key === 'Enter') {
                 if (mainPassword.value === 'амина') {
                     welcomeScreen.classList.add('hidden');
-                    nav.classList.add('show');
                     isSiteUnlocked = true;
                     updateCountdown();
                     setInterval(updateCountdown, 1000);
+                    showTrolls();
                 } else {
                     mainPassword.value = '';
                     mainPassword.style.borderColor = '#ff6b6b';
@@ -331,65 +317,26 @@
         function switchTab(tab) {
             if (!isSiteUnlocked) return;
             
-            document.querySelectorAll('.tab-content').forEach(t => t.classList.remove('active'));
+            document.querySelectorAll('.tab-content').forEach(t => t.style.opacity = '0.3');
             document.querySelectorAll('.nav-btn').forEach(b => b.classList.remove('active'));
             
-            document.getElementById(`tab${tab}`).classList.add('active');
+            document.getElementById(`tab${tab}`).style.opacity = '1';
             document.querySelectorAll('.nav-btn')[tab].classList.add('active');
             currentTab = tab;
-
-            // АВТОВОСПРОИЗВЕДЕНИЕ ПАСХАЛКИ
-            if (tab === 1 && !slideshowInterval) {
-                playShow();
-            }
         }
 
-        // КРАСИВЫЙ ЦВЕТНОЙ ТРОЛЛФЕЙС
-        function createSmoothTroll() {
-            const troll = document.createElement('div');
-            troll.className = `trollface ${trollColors[Math.floor(Math.random() * trollColors.length)]}`;
-            troll.style.backgroundImage = 'url("assets/t.jpeg")';
-            troll.style.left = (Math.random() * 75 + 12.5) + '%';
-            troll.style.top = (Math.random() * 60 + 20) + '%';
-            document.body.appendChild(troll);
-            
-            troll.style.animation = 'smoothTroll 3s cubic-bezier(0.25, 0.46, 0.45, 0.94) forwards';
-            setTimeout(() => {
-                if (troll.parentNode) troll.remove();
-            }, 3000);
-        }
-
-        // ПАСХАЛКА - АВТОВОСПРОИЗВЕДЕНИЕ
-        function playShow() {
+        // АВТО ПАСХАЛКА - КВАДРАТНЫЕ ТРОЛЛФЕЙСЫ
+        function showTrolls() {
             music.currentTime = 0;
             music.volume = 0.25;
             music.play().catch(() => {});
             
-            createSmoothTroll();
-            showSlide(0);
-            
-            slideshowInterval = setInterval(() => {
-                createSmoothTroll();
-                nextSlide();
-            }, 4500);
-            
-            setTimeout(() => {
-                clearInterval(slideshowInterval);
-                music.pause();
-                music.currentTime = 0;
-                slideshowInterval = null;
-            }, 22500);
-        }
-
-        const slides = document.querySelectorAll('.slide');
-        function showSlide(n) {
-            slides.forEach((slide, i) => slide.classList.toggle('active', i === n));
-            document.getElementById('slideshow').classList.add('show');
-        }
-
-        function nextSlide() {
-            slideIndex = (slideIndex + 1) % 5;
-            showSlide(slideIndex);
+            const trolls = document.querySelectorAll('.trollface');
+            trolls.forEach((troll, index) => {
+                setTimeout(() => {
+                    troll.classList.add('show');
+                }, index * 300);
+            });
         }
 
         // ВИДЕО ХОВЕР
@@ -423,61 +370,7 @@
             };
         }
 
-        // ИГРА С ПАДАЮЩИМИ ФОТО
-        function startFallingGame() {
-            const game = document.getElementById('fallingGame');
-            game.innerHTML = '';
-            fallingScore = 0;
-            
-            if (gameInterval) clearInterval(gameInterval);
-            
-            game.style.pointerEvents = 'auto';
-            gameInterval = setInterval(() => {
-                const photo = document.createElement('div');
-                photo.className = 'falling-photo';
-                photo.style.left = Math.random() * 90 + '%';
-                photo.style.backgroundImage = `url("assets/s${Math.floor(Math.random() * 5) + 1}.jpeg")`;
-                game.appendChild(photo);
-                
-                photo.onclick = () => {
-                    photo.style.transform = 'scale(0.3) rotate(180deg)';
-                    photo.style.opacity = '0';
-                    setTimeout(() => photo.remove(), 300);
-                    fallingScore += 10;
-                };
-                
-                setTimeout(() => {
-                    if (photo.parentNode) {
-                        photo.style.transform = 'scale(0.6)';
-                        photo.style.opacity = '0';
-                        setTimeout(() => photo.remove(), 300);
-                    }
-                }, 8000);
-            }, 1400);
-            
-            setTimeout(() => {
-                clearInterval(gameInterval);
-                game.style.pointerEvents = 'none';
-            }, 40000);
-        }
-
-        // СТИЛИ ДЛЯ ПАДАЮЩИХ ФОТО
-        const fallingStyle = document.createElement('style');
-        fallingStyle.textContent = `
-            .falling-photo { 
-                position: absolute; width: 130px; height: 130px; background-size: cover; 
-                border-radius: 20px; cursor: pointer; transition: all 0.3s ease; 
-                border: 3px solid rgba(255,255,255,0.6); backdrop-filter: blur(10px);
-                box-shadow: 0 15px 40px rgba(0,0,0,0.6); 
-                animation: fall 6s cubic-bezier(0.25, 0.46, 0.45, 0.94) infinite; 
-            }
-            .falling-photo:hover { transform: scale(1.2) rotate(5deg); filter: brightness(1.5); }
-            @keyframes fall { 
-                from { transform: translateY(-150px) rotate(0deg); } 
-                to { transform: translateY(100vh) rotate(360deg); } 
-            }
-        `;
-        document.head.appendChild(fallingStyle);
+        // ИГРА - УБРАНА
     </script>
 </body>
 </html>
