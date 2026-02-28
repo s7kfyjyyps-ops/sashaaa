@@ -13,9 +13,14 @@
             overflow: hidden;
         }
         
-        /* Экран пароля */
-        .password-screen { text-align: center; max-width: 300px; width: 90vw; }
-        .password-screen h1 { font-size: clamp(2rem, 10vw, 4rem); font-weight: 300; letter-spacing: -1px; margin-bottom: 2rem; opacity: 0.8; }
+        .password-screen { 
+            text-align: center; max-width: 300px; width: 90vw; 
+            transition: opacity 0.5s;
+        }
+        .password-screen h1 { 
+            font-size: clamp(2rem, 10vw, 4rem); font-weight: 300; 
+            letter-spacing: -1px; margin-bottom: 2rem; opacity: 0.8; 
+        }
         .password-screen input { 
             width: 100%; padding: 15px; 
             background: rgba(255,255,255,0.05); 
@@ -29,108 +34,98 @@
             outline: none; border-color: rgba(255,255,255,0.5); 
             box-shadow: 0 0 20px rgba(255,255,255,0.1);
         }
+        .password-screen.hidden { display: none; }
         
-        /* Слайдшоу 35% ЭКРАНА */
         .slideshow { 
             position: fixed; top: 50%; left: 50%; 
             transform: translate(-50%, -50%); 
-            width: 35vw; height: 35vh; 
-            display: none; opacity: 0; transition: opacity 1s; 
+            width: 35vw; height: 35vh; display: none;
+            border-radius: 10px; overflow: hidden;
         }
-        .slideshow.active { display: block; opacity: 1; }
-        .slideshow img { 
-            width: 100%; height: 100%; 
-            object-fit: cover; border-radius: 10px; 
-            opacity: 0; transition: opacity 3s ease-in-out; 
-            box-shadow: 0 20px 60px rgba(0,0,0,0.8); 
+        .slideshow.show { display: block; }
+        
+        .slide { 
+            position: absolute; width: 100%; height: 100%; 
+            opacity: 0; transition: opacity 1s ease-in-out;
+            object-fit: cover; box-shadow: 0 20px 60px rgba(0,0,0,0.8);
         }
-        .slideshow img.active { opacity: 1; }
+        .slide.active { opacity: 1; }
+        
+        audio { display: none; }
     </style>
 </head>
 <body>
-    <!-- Пароль "амина" -->
     <div class="password-screen" id="passwordScreen">
         <h1>Саша</h1>
-        <input type="password" id="passwordInput" placeholder="пароль" maxlength="10" autocomplete="off">
+        <input type="password" id="passwordInput" placeholder="пароль" maxlength="10">
     </div>
 
-    <!-- Слайдшоу s1-s5 (35% экрана) -->
     <div class="slideshow" id="slideshow">
-        <img src="assets/s1.jpeg" class="active">
-        <img src="assets/s2.jpeg">
-        <img src="assets/s3.jpeg">
-        <img src="assets/s4.jpeg">
-        <img src="assets/s5.jpeg">
+        <img src="assets/s1.jpeg" class="slide active">
+        <img src="assets/s2.jpeg" class="slide">
+        <img src="assets/s3.jpeg" class="slide">
+        <img src="assets/s4.jpeg" class="slide">
+        <img src="assets/s5.jpeg" class="slide">
     </div>
+    
+    <audio id="music" src="assets/song1.mp3" preload="auto"></audio>
 
     <script>
         const passwordInput = document.getElementById('passwordInput');
         const passwordScreen = document.getElementById('passwordScreen');
         const slideshow = document.getElementById('slideshow');
-        const photos = document.querySelectorAll('.slideshow img');
-        let audioContext, audioBuffer, isPlaying = false;
+        const slides = document.querySelectorAll('.slide');
+        const music = document.getElementById('music');
+        let slideIndex = 0;
+        let interval;
 
-        // Загрузка song1.mp3
-        fetch('assets/song1.mp3')
-            .then(response => response.arrayBuffer())
-            .then(arrayBuffer => {
-                if (!audioContext) {
-                    audioContext = new (window.AudioContext || window.webkitAudioContext)();
-                }
-                return audioContext.decodeAudioData(arrayBuffer);
-            })
-            .then(buffer => {
-                audioBuffer = buffer;
-            })
-            .catch(err => console.log('Audio load error:', err));
-
-        // Проверка пароля
+        passwordInput.focus();
+        
         passwordInput.addEventListener('keypress', (e) => {
             if (e.key === 'Enter') {
                 if (passwordInput.value === 'амина') {
-                    passwordScreen.style.display = 'none';
-                    slideshow.classList.add('active');
-                    play20Seconds();
+                    // Скрываем пароль
+                    passwordScreen.classList.add('hidden');
+                    
+                    // Показываем слайдшоу
+                    slideshow.classList.add('show');
+                    
+                    // Запускаем музыку и слайды
+                    playShow();
                 } else {
                     passwordInput.value = '';
-                    passwordInput.style.borderColor = 'rgba(255,100,100,0.5)';
+                    passwordInput.style.borderColor = '#ff6464';
                     setTimeout(() => {
                         passwordInput.style.borderColor = 'rgba(255,255,255,0.2)';
-                    }, 500);
+                    }, 300);
                 }
             }
         });
 
-        // Играем 20 секунд музыки + слайдер
-        function play20Seconds() {
-            if (!audioBuffer || isPlaying) return;
+        function playShow() {
+            // Музыка 20 секунд
+            music.currentTime = 0;
+            music.play();
+            setTimeout(() => music.pause(), 20000);
             
-            isPlaying = true;
-            const source = audioContext.createBufferSource();
-            source.buffer = audioBuffer;
-            source.stop(audioContext.currentTime + 20); // 20 секунд
-            source.connect(audioContext.destination);
-            source.start(0);
+            // Слайды каждые 4 секунды
+            showSlide(0);
+            interval = setInterval(nextSlide, 4000);
             
-            // Фото каждые 4 секунды (5 фото = 20 сек)
-            let currentPhoto = 0;
-            const interval = 4000; // 4 секунды
-            
-            const slideInterval = setInterval(() => {
-                photos[currentPhoto].classList.remove('active');
-                currentPhoto = (currentPhoto + 1) % 5;
-                photos[currentPhoto].classList.add('active');
-            }, interval);
-            
-            // Стоп через 20 секунд
             setTimeout(() => {
-                clearInterval(slideInterval);
-                isPlaying = false;
+                clearInterval(interval);
             }, 20000);
         }
 
-        // Фокус на поле ввода
-        passwordInput.focus();
+        function showSlide(n) {
+            slides.forEach(slide => slide.classList.remove('active'));
+            slides[n].classList.add('active');
+        }
+
+        function nextSlide() {
+            slideIndex = (slideIndex + 1) % 5;
+            showSlide(slideIndex);
+        }
     </script>
 </body>
 </html>
